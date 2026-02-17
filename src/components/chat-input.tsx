@@ -2,9 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Plus, Settings2, AudioLines, ArrowUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ToolsMenu } from './tools-menu';
 
 interface ChatInputProps {
   onSendMessage: (msg: string) => void;
@@ -13,7 +11,6 @@ interface ChatInputProps {
 
 export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const [value, setValue] = useState('');
-  const [showTools, setShowTools] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = () => {
@@ -52,34 +49,25 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Ask anything..."
-            className="w-full bg-transparent border-none focus:ring-0 resize-none max-h-40 p-0 text-white placeholder:text-neutral-500 font-body text-lg leading-relaxed"
+            className="w-full bg-transparent border-none focus:ring-0 focus:outline-none outline-none resize-none max-h-40 p-0 text-white placeholder:text-neutral-500 font-body text-lg leading-relaxed shadow-none"
           />
 
           {/* Bottom Row: Actions */}
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-3">
-              <Button 
-                size="icon" 
-                variant="ghost" 
-                className="rounded-full w-8 h-8 text-neutral-400 hover:text-white hover:bg-white/10 transition-colors"
+              <button 
+                type="button"
+                className="rounded-full w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
               >
                 <Plus className="w-5 h-5" />
-              </Button>
+              </button>
               
-              <div className="relative">
-                <Button 
-                  size="icon" 
-                  variant="ghost" 
-                  className={cn(
-                    "rounded-full w-8 h-8 transition-colors",
-                    showTools ? "text-white bg-white/10" : "text-neutral-400 hover:text-white hover:bg-white/10"
-                  )}
-                  onClick={() => setShowTools(!showTools)}
-                >
-                  <Settings2 className="w-5 h-5" />
-                </Button>
-                {showTools && <ToolsMenu onClose={() => setShowTools(false)} />}
-              </div>
+              <button 
+                type="button"
+                className="rounded-full w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+              >
+                <Settings2 className="w-5 h-5" />
+              </button>
             </div>
 
             <div className="relative w-10 h-10 flex items-center justify-center">
@@ -88,9 +76,9 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                 onClick={handleSubmit}
                 disabled={!hasText}
                 className={cn(
-                  "absolute inset-0 flex items-center justify-center rounded-full transition-all duration-500 ease-in-out",
+                  "absolute inset-0 flex items-center justify-center rounded-full transition-all duration-500 ease-in-out focus:outline-none",
                   hasText 
-                    ? "bg-white text-black scale-100 rotate-0 opacity-100" 
+                    ? "bg-white text-black scale-100 rotate-0 opacity-100 shadow-lg" 
                     : "bg-transparent text-neutral-400 scale-90 rotate-90 opacity-0 pointer-events-none"
                 )}
               >
@@ -98,8 +86,9 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
               </button>
               
               <button
+                type="button"
                 className={cn(
-                  "absolute inset-0 flex items-center justify-center transition-all duration-500 ease-in-out",
+                  "absolute inset-0 flex items-center justify-center transition-all duration-500 ease-in-out focus:outline-none",
                   !hasText 
                     ? "opacity-100 scale-100 rotate-0 text-neutral-400" 
                     : "opacity-0 scale-50 -rotate-90 pointer-events-none"
