@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Plus, Settings2, Mic, Send, Square } from 'lucide-react';
+import { Plus, Settings2, AudioLines, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ToolsMenu } from './tools-menu';
@@ -13,7 +13,6 @@ interface ChatInputProps {
 
 export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const [value, setValue] = useState('');
-  const [isRecording, setIsRecording] = useState(false);
   const [showTools, setShowTools] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -31,11 +30,6 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
     }
   };
 
-  const toggleRecording = () => {
-    setIsRecording(!isRecording);
-    // Simulate recording logic
-  };
-
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -43,26 +37,42 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
     }
   }, [value]);
 
+  const hasText = value.trim().length > 0;
+
   return (
     <div className="fixed bottom-0 left-0 right-0 p-4 md:p-8 bg-gradient-to-t from-[#F0F0F0] via-[#F0F0F0] to-transparent pointer-events-none">
       <div className="max-w-4xl mx-auto w-full pointer-events-auto">
         
-        {/* Neon Ring Container */}
-        <div className="neon-ring-container rounded-3xl shadow-2xl">
-          <div className="neon-ring-inner rounded-[calc(1.5rem-2px)] flex items-end p-2 md:p-3 gap-2">
-            
-            {/* Left Buttons */}
-            <div className="flex items-center gap-1 mb-1">
-              <Button size="icon" variant="ghost" className="rounded-full w-10 h-10 text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors">
+        <div className="bg-[#171717] rounded-3xl shadow-2xl overflow-hidden p-4 md:p-5 flex flex-col gap-2 transition-all duration-300 border border-white/5">
+          {/* Top Row: Input Area */}
+          <textarea
+            ref={textareaRef}
+            rows={1}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask anything..."
+            className="w-full bg-transparent border-none focus:ring-0 resize-none max-h-40 p-0 text-white placeholder:text-neutral-500 font-body text-lg leading-relaxed"
+          />
+
+          {/* Bottom Row: Actions */}
+          <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center gap-3">
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="rounded-full w-8 h-8 text-neutral-400 hover:text-white hover:bg-white/10 transition-colors"
+              >
                 <Plus className="w-5 h-5" />
               </Button>
+              
               <div className="relative">
                 <Button 
                   size="icon" 
                   variant="ghost" 
                   className={cn(
-                    "rounded-full w-10 h-10 transition-colors",
-                    showTools ? "text-neutral-900 bg-neutral-100" : "text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100"
+                    "rounded-full w-8 h-8 transition-colors",
+                    showTools ? "text-white bg-white/10" : "text-neutral-400 hover:text-white hover:bg-white/10"
                   )}
                   onClick={() => setShowTools(!showTools)}
                 >
@@ -72,50 +82,37 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
               </div>
             </div>
 
-            {/* Input Area */}
-            <textarea
-              ref={textareaRef}
-              rows={1}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={isRecording ? "Listening..." : "Message Vorgawall..."}
-              className="flex-1 bg-transparent border-none focus:ring-0 resize-none max-h-40 py-3 px-2 text-neutral-800 placeholder:text-neutral-400 font-body text-base"
-            />
-
-            {/* Right Buttons */}
-            <div className="flex items-center gap-2 mb-1">
-              <Button 
-                onClick={toggleRecording}
-                size="icon" 
-                variant="ghost" 
-                className={cn(
-                  "rounded-full w-10 h-10 transition-all",
-                  isRecording 
-                    ? "bg-red-50 text-red-500 hover:bg-red-100 animate-pulse" 
-                    : "text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100"
-                )}
-              >
-                {isRecording ? <Square className="w-5 h-5 fill-current" /> : <Mic className="w-5 h-5" />}
-              </Button>
-
-              <Button 
+            <div className="relative w-10 h-10 flex items-center justify-center">
+              {/* Transition between AudioLines and ArrowUp */}
+              <button
                 onClick={handleSubmit}
-                disabled={!value.trim() && !isRecording}
-                size="icon" 
+                disabled={!hasText}
                 className={cn(
-                  "rounded-full w-10 h-10 transition-all duration-300",
-                  value.trim() ? "bg-neutral-900 text-white" : "bg-neutral-200 text-neutral-400"
+                  "absolute inset-0 flex items-center justify-center rounded-full transition-all duration-500 ease-in-out",
+                  hasText 
+                    ? "bg-white text-black scale-100 rotate-0 opacity-100" 
+                    : "bg-transparent text-neutral-400 scale-90 rotate-90 opacity-0 pointer-events-none"
                 )}
               >
-                <Send className="w-5 h-5" />
-              </Button>
+                <ArrowUp className="w-5 h-5 stroke-[2.5px]" />
+              </button>
+              
+              <button
+                className={cn(
+                  "absolute inset-0 flex items-center justify-center transition-all duration-500 ease-in-out",
+                  !hasText 
+                    ? "opacity-100 scale-100 rotate-0 text-neutral-400" 
+                    : "opacity-0 scale-50 -rotate-90 pointer-events-none"
+                )}
+              >
+                <AudioLines className="w-6 h-6" />
+              </button>
             </div>
           </div>
         </div>
         
-        <p className="text-[10px] text-neutral-400 text-center mt-3 uppercase tracking-widest font-medium">
-          Powered by Vorgawall AI • Demo Version
+        <p className="text-[10px] text-neutral-400 text-center mt-4 uppercase tracking-[0.2em] font-semibold opacity-50">
+          Powered by Vorgawall AI
         </p>
       </div>
     </div>
