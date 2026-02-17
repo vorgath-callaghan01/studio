@@ -15,7 +15,11 @@ export function ChatHeader() {
         </div>
       </div>
       
-      <Button variant="ghost" size="icon" className="text-neutral-600 hover:text-[#0a0a0a] rounded-full">
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="bg-[#171717] hover:bg-[#262626] text-white hover:text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors active:text-white"
+      >
         <MoreHorizontal className="w-6 h-6" />
       </Button>
     </header>

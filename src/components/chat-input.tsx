@@ -40,7 +40,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
     <div className="fixed bottom-0 left-0 right-0 p-4 md:p-8 bg-gradient-to-t from-[#F0F0F0] via-[#F0F0F0] to-transparent pointer-events-none">
       <div className="max-w-4xl mx-auto w-full pointer-events-auto">
         
-        <div className="bg-[#171717] rounded-3xl shadow-2xl overflow-hidden p-4 md:p-5 flex flex-col gap-2 transition-all duration-300 border border-white/5">
+        <div className="bg-[#171717] rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] overflow-hidden p-4 md:p-5 flex flex-col gap-2 transition-all duration-300 border border-white/5">
           {/* Top Row: Input Area */}
           <textarea
             ref={textareaRef}
@@ -100,8 +100,8 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
           </div>
         </div>
         
-        <p className="text-[10px] text-neutral-400 text-center mt-4 uppercase tracking-[0.2em] font-semibold opacity-50">
-          Powered by Vorgawall AI
+        <p className="text-[10px] text-[#0a0a0a] text-center mt-4 uppercase tracking-[0.2em] font-bold opacity-70">
+          Powered by Vorgawall AI • Demo Version
         </p>
       </div>
     </div>
