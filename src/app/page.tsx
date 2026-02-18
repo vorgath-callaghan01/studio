@@ -122,7 +122,7 @@ function ChatContent() {
   const getMockResponse = (input: string) => {
     const lowerInput = input.toLowerCase();
     if (lowerInput.includes('hello') || lowerInput.includes('hi')) return "Hello! I'm the Vorgawall Assistant. How can I help you build your shop today?";
-    if (lowerInput.includes('price')) return "Vorgawall offers flexible pricing starting from $0/mo for starters. Check out vorgawall.shop for details.";
+    if (lowerInput.includes('price')) return "Vorgawall offers flexible pricing starting from $30/mo for starters. Check out vorgawall.shop for details.";
     return "That's an interesting question. In the context of the Vorgawall ecosystem, we provide a unified API to handle global logistics and payments seamlessly.";
   };
 
