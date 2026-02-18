@@ -175,12 +175,12 @@ export default function Home() {
       <Suspense fallback={
         <div className="h-full w-full flex items-center justify-center bg-[#F0F0F0]">
           <div className="animate-pulse flex flex-col items-center gap-4">
-            <div className="w-16 h-16 bg-white rounded-2xl shadow-lg relative overflow-hidden">
+            <div className="w-20 h-20 bg-white rounded-full shadow-lg relative overflow-hidden border-2 border-white">
                <Image 
                 src="https://0xjfocldlbtienb8.public.blob.vercel-storage.com/file_000000006a147206ae541ccfce29fda9%20%281%29.png"
                 alt="Loading..."
                 fill
-                className="object-contain p-2"
+                className="object-contain p-3"
               />
             </div>
             <div className="h-4 w-24 bg-neutral-200 rounded-full" />
