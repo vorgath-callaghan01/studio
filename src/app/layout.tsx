@@ -17,9 +17,14 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png',
-    apple: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png',
-    shortcut: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png',
+    icon: [
+      { url: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png' },
+      { url: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png', rel: 'icon', type: 'image/png' },
+    ],
+    apple: [
+      { url: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png' },
+    ],
+    shortcut: ['https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png'],
   },
   openGraph: {
     title: 'Basic Chatbot by Vorgawall Shop',
@@ -67,6 +72,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link rel="icon" href="https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png" />
         <link rel="apple-touch-icon" href="https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png" />
       </head>
       <body className="font-body antialiased bg-[#F0F0F0] text-[#0a0a0a]">
         {children}
