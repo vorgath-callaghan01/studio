@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ChatHeader } from '@/components/chat-header';
 import { ChatMessage } from '@/components/chat-message';
 import { ChatInput } from '@/components/chat-input';
@@ -12,25 +13,85 @@ interface Message {
   content: string;
 }
 
+interface ChatSession {
+  id: string;
+  title: string;
+  date: string;
+  messages: Message[];
+}
+
 export default function Home() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const chatId = searchParams.get('id');
+  
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollEndRef = useRef<HTMLDivElement>(null);
 
+  // Load chat from local storage if ID is present
+  useEffect(() => {
+    if (chatId) {
+      const savedChats = localStorage.getItem('vorgawall_chats');
+      if (savedChats) {
+        const chats: ChatSession[] = JSON.parse(savedChats);
+        const currentChat = chats.find(c => c.id === chatId);
+        if (currentChat) {
+          setMessages(currentChat.messages);
+        }
+      }
+    } else {
+      setMessages([]);
+    }
+  }, [chatId]);
+
   const handleSendMessage = (content: string) => {
     const userMsg: Message = { role: 'user', content };
-    setMessages(prev => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     
+    // Save/Update to Local Storage
+    saveChatToLocal(newMessages);
+
     // Simulate assistant response
     setIsTyping(true);
     setTimeout(() => {
-      const response: Message = { 
+      const assistantMsg: Message = { 
         role: 'assistant', 
         content: getMockResponse(content) 
       };
-      setMessages(prev => [...prev, response]);
+      const finalMessages = [...newMessages, assistantMsg];
+      setMessages(finalMessages);
+      saveChatToLocal(finalMessages);
       setIsTyping(false);
     }, 1500);
+  };
+
+  const saveChatToLocal = (msgs: Message[]) => {
+    const savedChats = localStorage.getItem('vorgawall_chats');
+    let chats: ChatSession[] = savedChats ? JSON.parse(savedChats) : [];
+    
+    const currentId = chatId || Math.random().toString(36).substring(7);
+    const existingIndex = chats.findIndex(c => c.id === currentId);
+
+    const updatedChat: ChatSession = {
+      id: currentId,
+      title: msgs[0]?.content.substring(0, 30) || 'New Chat',
+      date: new Date().toLocaleString(),
+      messages: msgs
+    };
+
+    if (existingIndex > -1) {
+      chats[existingIndex] = updatedChat;
+    } else {
+      chats.unshift(updatedChat);
+      // Update URL without refreshing if it's a new chat
+      if (!chatId) {
+        window.history.pushState({}, '', `?id=${currentId}`);
+      }
+    }
+
+    localStorage.setItem('vorgawall_chats', JSON.stringify(chats));
   };
 
   const getMockResponse = (input: string) => {

@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from 'next/link';
@@ -39,10 +38,12 @@ export function ChatHeader() {
             <Pencil className="w-4 h-4 text-neutral-400" />
             <span className="font-medium text-neutral-100">Rename</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
-            <History className="w-4 h-4 text-neutral-400" />
-            <span className="font-medium text-neutral-100">History Chat</span>
-          </DropdownMenuItem>
+          <Link href="/history">
+            <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+              <History className="w-4 h-4 text-neutral-400" />
+              <span className="font-medium text-neutral-100">History Chat</span>
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer text-destructive focus:text-destructive hover:bg-neutral-700 focus:bg-neutral-700">
             <Trash2 className="w-4 h-4" />
             <span className="font-medium">Delete</span>
