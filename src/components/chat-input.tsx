@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { Plus, Settings2, AudioLines, ArrowUp, Camera, Image as ImageIcon, FileUp, Search, Sparkles, FileText, X, File } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -277,8 +278,8 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                 <ArrowUp className="w-5 h-5 stroke-[2.5px]" />
               </button>
               
-              <button
-                type="button"
+              <Link 
+                href="/live-voice"
                 className={cn(
                   "absolute inset-0 flex items-center justify-center transition-all duration-500 ease-in-out focus:outline-none",
                   !hasContent 
@@ -287,7 +288,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                 )}
               >
                 <AudioLines className="w-6 h-6" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
