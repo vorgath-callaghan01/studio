@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Plus, Settings2, AudioLines, ArrowUp, Camera, Image as ImageIcon, FileUp, Search, Sparkles, FileText } from 'lucide-react';
+import { Plus, Settings2, AudioLines, ArrowUp, Camera, Image as ImageIcon, FileUp, Search, Sparkles, FileText, X, File } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
@@ -15,16 +15,29 @@ interface ChatInputProps {
   isTyping?: boolean;
 }
 
+interface Attachment {
+  id: string;
+  type: 'image' | 'file';
+  url: string;
+  name: string;
+}
+
 export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const [value, setValue] = useState('');
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [openMenu, setOpenMenu] = useState<'plus' | 'settings' | null>(null);
+  
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = () => {
-    if (value.trim()) {
+    if (value.trim() || attachments.length > 0) {
+      // In a real app, you'd send attachments too
       onSendMessage(value);
       setValue('');
+      setAttachments([]);
     }
   };
 
@@ -35,6 +48,29 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'file') => {
+    const files = e.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach(file => {
+      const url = URL.createObjectURL(file);
+      const newAttachment: Attachment = {
+        id: Math.random().toString(36).substring(7),
+        type,
+        url,
+        name: file.name
+      };
+      setAttachments(prev => [...prev, newAttachment]);
+    });
+    
+    // Reset input
+    e.target.value = '';
+  };
+
+  const removeAttachment = (id: string) => {
+    setAttachments(prev => prev.filter(a => a.id !== id));
+  };
+
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -42,29 +78,66 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
     }
   }, [value]);
 
-  const hasText = value.trim().length > 0;
+  const hasContent = value.trim().length > 0 || attachments.length > 0;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 p-4 md:p-8 bg-gradient-to-t from-[#F0F0F0] via-[#F0F0F0] to-transparent pointer-events-none">
       <div className="max-w-4xl mx-auto w-full pointer-events-auto">
         
-        {/* Hidden Camera Input to trigger native camera app */}
+        {/* Hidden Inputs */}
         <input 
           type="file" 
           ref={cameraInputRef} 
           accept="image/*" 
           capture="environment" 
           className="hidden" 
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              // Placeholder: In a real app, you would handle the captured photo here
-              console.log("Photo captured:", file.name);
-            }
-          }}
+          onChange={(e) => handleFileChange(e, 'image')}
+        />
+        <input 
+          type="file" 
+          ref={galleryInputRef} 
+          accept="image/*" 
+          className="hidden" 
+          multiple
+          onChange={(e) => handleFileChange(e, 'image')}
+        />
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          accept=".pdf,.txt,.html,.js,.css,.tsx,.json,.md,.doc,.docx" 
+          className="hidden" 
+          multiple
+          onChange={(e) => handleFileChange(e, 'file')}
         />
         
         <div className="bg-[#171717] rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] overflow-hidden p-4 md:p-5 flex flex-col gap-2 transition-all duration-300 border border-white/5">
+          
+          {/* Preview Area */}
+          {attachments.length > 0 && (
+            <div className="flex flex-wrap gap-3 mb-2 animate-in fade-in slide-in-from-top-2 duration-300">
+              {attachments.map((file) => (
+                <div key={file.id} className="relative group">
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden border border-white/10 bg-neutral-800 flex items-center justify-center shadow-lg">
+                    {file.type === 'image' ? (
+                      <img src={file.url} alt="preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center p-2 text-center">
+                        <File className="w-8 h-8 text-neutral-400 mb-1" />
+                        <span className="text-[10px] text-white truncate w-16 px-1">{file.name}</span>
+                      </div>
+                    )}
+                  </div>
+                  <button 
+                    onClick={() => removeAttachment(file.id)}
+                    className="absolute -top-2 -right-2 bg-neutral-900 text-white rounded-full p-1 shadow-md border border-white/20 hover:bg-neutral-700 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Top Row: Input Area */}
           <textarea
             ref={textareaRef}
@@ -99,11 +172,17 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                     <Camera className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Camera</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                  <DropdownMenuItem 
+                    className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
+                    onClick={() => galleryInputRef.current?.click()}
+                  >
                     <ImageIcon className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Upload image</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                  <DropdownMenuItem 
+                    className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
                     <FileUp className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Upload file</span>
                   </DropdownMenuItem>
@@ -142,10 +221,10 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
             <div className="relative w-10 h-10 flex items-center justify-center">
               <button
                 onClick={handleSubmit}
-                disabled={!hasText}
+                disabled={!hasContent}
                 className={cn(
                   "absolute inset-0 flex items-center justify-center rounded-full transition-all duration-500 ease-in-out focus:outline-none",
-                  hasText 
+                  hasContent 
                     ? "bg-white text-black scale-100 rotate-0 opacity-100 shadow-lg" 
                     : "bg-transparent text-neutral-400 scale-90 rotate-90 opacity-0 pointer-events-none"
                 )}
@@ -157,7 +236,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                 type="button"
                 className={cn(
                   "absolute inset-0 flex items-center justify-center transition-all duration-500 ease-in-out focus:outline-none",
-                  !hasText 
+                  !hasContent 
                     ? "opacity-100 scale-100 rotate-0 text-neutral-400" 
                     : "opacity-0 scale-50 -rotate-90 pointer-events-none"
                 )}
