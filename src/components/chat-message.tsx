@@ -40,8 +40,8 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
 
   const handleThumbsUp = () => {
     toast({
-      title: "Feedback Received",
       description: "Thank you for liking our chatbot!",
+      className: "rounded-3xl bg-neutral-800 text-white border-neutral-700 shadow-2xl p-5",
     });
   };
 
@@ -50,6 +50,7 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
       toast({
         title: "Feedback Submitted",
         description: "Thank you for your honest feedback. We'll use it to improve!",
+        className: "rounded-3xl bg-neutral-800 text-white border-neutral-700 shadow-2xl p-5",
       });
       setDislikeReason('');
       setShowDislikeDialog(false);
