@@ -6,6 +6,17 @@ import { MessageCircle, Trash2, Calendar, ChevronRight, MessageSquare } from 'lu
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -21,6 +32,7 @@ interface ChatSession {
 
 export default function HistoryPage() {
   const [chats, setChats] = useState<ChatSession[]>([]);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     const savedChats = localStorage.getItem('vorgawall_chats');
@@ -29,12 +41,12 @@ export default function HistoryPage() {
     }
   }, []);
 
-  const deleteChat = (id: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const updatedChats = chats.filter(c => c.id !== id);
+  const confirmDelete = () => {
+    if (!deleteId) return;
+    const updatedChats = chats.filter(c => c.id !== deleteId);
     setChats(updatedChats);
     localStorage.setItem('vorgawall_chats', JSON.stringify(updatedChats));
+    setDeleteId(null);
   };
 
   return (
@@ -61,39 +73,69 @@ export default function HistoryPage() {
             </div>
           ) : (
             chats.map((chat) => (
-              <Link key={chat.id} href={`/?id=${chat.id}`}>
-                <Card className="group p-5 rounded-3xl bg-white border-neutral-100 hover:border-neutral-300 shadow-sm hover:shadow-md transition-all duration-200 mb-4 cursor-pointer relative">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 pr-10">
-                      <h3 className="font-bold text-[#0a0a0a] line-clamp-1 mb-2">
-                        {chat.title}
-                      </h3>
-                      <div className="flex items-center gap-4 text-xs text-neutral-400">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          <span>{chat.date}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MessageSquare className="w-3 h-3" />
-                          <span>{chat.messages.length} messages</span>
+              <div key={chat.id} className="relative">
+                <Link href={`/?id=${chat.id}`}>
+                  <Card className="group p-5 rounded-3xl bg-white border-neutral-100 hover:border-neutral-300 shadow-sm hover:shadow-md transition-all duration-200 mb-4 cursor-pointer relative">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 pr-10">
+                        <h3 className="font-bold text-[#0a0a0a] line-clamp-1 mb-2">
+                          {chat.title}
+                        </h3>
+                        <div className="flex items-center gap-4 text-xs text-neutral-400">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            <span>{chat.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <MessageSquare className="w-3 h-3" />
+                            <span>{chat.messages.length} messages</span>
+                          </div>
                         </div>
                       </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <ChevronRight className="w-5 h-5 text-neutral-300 group-hover:text-neutral-900 transition-colors" />
+                      </div>
                     </div>
-                    
-                    <div className="flex items-center gap-2">
+                  </Card>
+                </Link>
+
+                <div className="absolute right-12 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="opacity-0 group-hover:opacity-100 text-destructive hover:bg-destructive/10 rounded-full transition-opacity"
-                        onClick={(e) => deleteChat(chat.id, e)}
+                        className="text-destructive hover:bg-destructive/10 rounded-full"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setDeleteId(chat.id);
+                        }}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
-                      <ChevronRight className="w-5 h-5 text-neutral-300 group-hover:text-neutral-900 transition-colors" />
-                    </div>
-                  </div>
-                </Card>
-              </Link>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-xl font-bold">Delete Conversation</AlertDialogTitle>
+                        <AlertDialogDescription className="text-neutral-500">
+                          Are you sure you want to permanently delete this conversation?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="gap-2 mt-4">
+                        <AlertDialogCancel className="rounded-full border-neutral-200">Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          className="rounded-full bg-destructive text-white hover:bg-destructive/90"
+                          onClick={confirmDelete}
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
             ))
           )}
         </div>

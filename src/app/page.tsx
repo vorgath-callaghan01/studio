@@ -27,22 +27,23 @@ export default function Home() {
   
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [currentChat, setCurrentChat] = useState<ChatSession | null>(null);
   const scrollEndRef = useRef<HTMLDivElement>(null);
 
   // Load chat from local storage if ID is present
   useEffect(() => {
-    if (chatId) {
-      const savedChats = localStorage.getItem('vorgawall_chats');
-      if (savedChats) {
-        const chats: ChatSession[] = JSON.parse(savedChats);
-        const currentChat = chats.find(c => c.id === chatId);
-        if (currentChat) {
-          setMessages(currentChat.messages);
-        }
+    const savedChats = localStorage.getItem('vorgawall_chats');
+    if (chatId && savedChats) {
+      const chats: ChatSession[] = JSON.parse(savedChats);
+      const session = chats.find(c => c.id === chatId);
+      if (session) {
+        setMessages(session.messages);
+        setCurrentChat(session);
+        return;
       }
-    } else {
-      setMessages([]);
     }
+    setMessages([]);
+    setCurrentChat(null);
   }, [chatId]);
 
   const handleSendMessage = (content: string) => {
@@ -76,8 +77,8 @@ export default function Home() {
 
     const updatedChat: ChatSession = {
       id: currentId,
-      title: msgs[0]?.content.substring(0, 30) || 'New Chat',
-      date: new Date().toLocaleString(),
+      title: currentChat?.title || msgs[0]?.content.substring(0, 30) || 'New Chat',
+      date: currentChat?.date || new Date().toLocaleString(),
       messages: msgs
     };
 
@@ -85,13 +86,38 @@ export default function Home() {
       chats[existingIndex] = updatedChat;
     } else {
       chats.unshift(updatedChat);
-      // Update URL without refreshing if it's a new chat
       if (!chatId) {
         window.history.pushState({}, '', `?id=${currentId}`);
       }
     }
 
+    setCurrentChat(updatedChat);
     localStorage.setItem('vorgawall_chats', JSON.stringify(chats));
+  };
+
+  const handleRename = (newTitle: string) => {
+    if (!currentChat) return;
+    const savedChats = localStorage.getItem('vorgawall_chats');
+    if (savedChats) {
+      let chats: ChatSession[] = JSON.parse(savedChats);
+      const index = chats.findIndex(c => c.id === currentChat.id);
+      if (index > -1) {
+        chats[index].title = newTitle;
+        localStorage.setItem('vorgawall_chats', JSON.stringify(chats));
+        setCurrentChat({ ...currentChat, title: newTitle });
+      }
+    }
+  };
+
+  const handleDelete = () => {
+    if (!currentChat) return;
+    const savedChats = localStorage.getItem('vorgawall_chats');
+    if (savedChats) {
+      let chats: ChatSession[] = JSON.parse(savedChats);
+      const filtered = chats.filter(c => c.id !== currentChat.id);
+      localStorage.setItem('vorgawall_chats', JSON.stringify(filtered));
+      router.push('/');
+    }
   };
 
   const getMockResponse = (input: string) => {
@@ -107,7 +133,11 @@ export default function Home() {
 
   return (
     <main className="relative h-screen w-full flex flex-col bg-[#F0F0F0] overflow-hidden">
-      <ChatHeader />
+      <ChatHeader 
+        title={currentChat?.title} 
+        onRename={handleRename}
+        onDelete={handleDelete}
+      />
       
       <ScrollArea className="flex-1 pt-20 pb-40">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
