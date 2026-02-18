@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -27,6 +26,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const [value, setValue] = useState('');
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [openMenu, setOpenMenu] = useState<'plus' | 'settings' | null>(null);
+  const [placeholder, setPlaceholder] = useState('Ask anything...');
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -38,6 +38,8 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
       onSendMessage(value);
       setValue('');
       setAttachments([]);
+      // Optional: reset placeholder after sending? 
+      // User didn't ask for it, so keeping current placeholder.
     }
   };
 
@@ -141,7 +143,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask anything..."
+            placeholder={placeholder}
             className="w-full bg-transparent border-none focus:ring-0 focus:outline-none outline-none resize-none max-h-40 p-0 text-white placeholder:text-neutral-500 font-body text-lg leading-relaxed shadow-none"
           />
 
@@ -197,15 +199,24 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-2xl mb-2">
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                  <DropdownMenuItem 
+                    className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
+                    onClick={() => setPlaceholder('Search for anything you want on the internet...')}
+                  >
                     <Search className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Search</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                  <DropdownMenuItem 
+                    className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
+                    onClick={() => setPlaceholder('Creativity above all else...')}
+                  >
                     <Sparkles className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Image Generate</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                  <DropdownMenuItem 
+                    className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
+                    onClick={() => setPlaceholder('Write any article, you are in control...')}
+                  >
                     <FileText className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Create Articles</span>
                   </DropdownMenuItem>
