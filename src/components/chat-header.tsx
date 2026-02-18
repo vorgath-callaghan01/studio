@@ -81,7 +81,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
           <DropdownMenuContent align="end" className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-xl">
             <DropdownMenuItem 
               className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
-              onClick={() => {
+              onSelect={() => {
                 setTempTitle(title || '');
                 setShowRenameDialog(true);
               }}
@@ -98,7 +98,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
             </Link>
             <DropdownMenuItem 
               className="rounded-2xl gap-3 py-3 cursor-pointer text-destructive focus:text-destructive hover:bg-neutral-700 focus:bg-neutral-700"
-              onClick={() => setShowDeleteAlert(true)}
+              onSelect={() => setShowDeleteAlert(true)}
               disabled={!title}
             >
               <Trash2 className="w-4 h-4" />

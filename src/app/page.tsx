@@ -51,10 +51,9 @@ export default function Home() {
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     
-    // Save/Update to Local Storage
-    saveChatToLocal(newMessages);
+    // Process saving and response
+    const activeId = saveChatToLocal(newMessages);
 
-    // Simulate assistant response
     setIsTyping(true);
     setTimeout(() => {
       const assistantMsg: Message = { 
@@ -63,16 +62,17 @@ export default function Home() {
       };
       const finalMessages = [...newMessages, assistantMsg];
       setMessages(finalMessages);
-      saveChatToLocal(finalMessages);
+      saveChatToLocal(finalMessages, activeId);
       setIsTyping(false);
     }, 1500);
   };
 
-  const saveChatToLocal = (msgs: Message[]) => {
+  const saveChatToLocal = (msgs: Message[], forceId?: string) => {
     const savedChats = localStorage.getItem('vorgawall_chats');
     let chats: ChatSession[] = savedChats ? JSON.parse(savedChats) : [];
     
-    const currentId = chatId || Math.random().toString(36).substring(7);
+    // Use existing chatId, or forceId if provided (for consecutive messages), or generate new
+    const currentId = chatId || forceId || Math.random().toString(36).substring(7);
     const existingIndex = chats.findIndex(c => c.id === currentId);
 
     const updatedChat: ChatSession = {
@@ -86,6 +86,7 @@ export default function Home() {
       chats[existingIndex] = updatedChat;
     } else {
       chats.unshift(updatedChat);
+      // Only push state if we are creating a brand new session and haven't updated URL yet
       if (!chatId) {
         window.history.pushState({}, '', `?id=${currentId}`);
       }
@@ -93,6 +94,7 @@ export default function Home() {
 
     setCurrentChat(updatedChat);
     localStorage.setItem('vorgawall_chats', JSON.stringify(chats));
+    return currentId;
   };
 
   const handleRename = (newTitle: string) => {
