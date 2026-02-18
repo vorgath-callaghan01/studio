@@ -26,8 +26,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from '@/hooks/use-toast';
 
 interface ChatHeaderProps {
   title?: string;
@@ -38,12 +41,34 @@ interface ChatHeaderProps {
 export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showRenameDialog, setShowRenameDialog] = useState(false);
+  const [showReportBugDialog, setShowReportBugDialog] = useState(false);
   const [tempTitle, setTempTitle] = useState(title || '');
+  
+  // Bug Report State
+  const [bugSubject, setBugSubject] = useState('');
+  const [bugDescription, setBugDescription] = useState('');
 
   const handleRenameSubmit = () => {
     if (tempTitle.trim() && onRename) {
       onRename(tempTitle);
       setShowRenameDialog(false);
+    }
+  };
+
+  const handleReportBugSubmit = () => {
+    if (bugSubject.trim() && bugDescription.trim()) {
+      toast({
+        title: "Report Submitted",
+        description: "Thank you for your feedback! Our team will look into it.",
+      });
+      setBugSubject('');
+      setBugDescription('');
+      setShowReportBugDialog(false);
+    } else {
+      toast({
+        variant: "destructive",
+        description: "Please fill in all fields.",
+      });
     }
   };
 
@@ -68,7 +93,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
           </div>
         </div>
         
-        {/* Set modal={false} to prevent pointer-events locking issues */}
+        {/* modal={false} is critical to prevent pointer-events locking issues */}
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button 
@@ -116,7 +141,13 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
               <span className="font-medium">Delete</span>
             </DropdownMenuItem>
 
-            <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+            <DropdownMenuItem 
+              className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
+              onSelect={(e) => {
+                e.preventDefault();
+                setShowReportBugDialog(true);
+              }}
+            >
               <Bug className="w-4 h-4 text-neutral-400" />
               <span className="font-medium text-neutral-100">Reports bug</span>
             </DropdownMenuItem>
@@ -152,7 +183,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-bold">Delete Conversation</AlertDialogTitle>
             <AlertDialogDescription className="text-neutral-500">
-              Are you sure you want to permanently delete this conversation?
+              Are you sure you want to permanently delete this conversation? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 mt-4">
@@ -169,6 +200,47 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Report Bug Dialog */}
+      <Dialog open={showReportBugDialog} onOpenChange={setShowReportBugDialog}>
+        <DialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[70]">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">Report a Bug</DialogTitle>
+            <DialogDescription className="text-neutral-500">
+              Help us improve by describing the issue you encountered.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-neutral-400">Subject</label>
+              <Input 
+                value={bugSubject}
+                onChange={(e) => setBugSubject(e.target.value)}
+                placeholder="What went wrong?"
+                className="rounded-2xl border-neutral-200 focus:ring-0 focus-visible:ring-0"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-neutral-400">Description</label>
+              <Textarea 
+                value={bugDescription}
+                onChange={(e) => setBugDescription(e.target.value)}
+                placeholder="Provide as much detail as possible..."
+                className="rounded-2xl border-neutral-200 focus:ring-0 focus-visible:ring-0 min-h-[120px] resize-none"
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" className="rounded-full" onClick={() => setShowReportBugDialog(false)}>Cancel</Button>
+            <Button 
+              className="rounded-full bg-[#171717] hover:bg-[#262626] text-white" 
+              onClick={handleReportBugSubmit}
+            >
+              Submit Report
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
