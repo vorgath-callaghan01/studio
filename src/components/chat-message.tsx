@@ -19,16 +19,16 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
     )}>
       <Avatar className="w-8 h-8 shrink-0 border border-neutral-200 shadow-sm">
         <AvatarImage src={isUser ? "" : "https://picsum.photos/seed/vorg/32/32"} />
-        <AvatarFallback className={cn(isUser ? "bg-neutral-800 text-white" : "bg-neutral-200 text-neutral-600")}>
+        <AvatarFallback className={cn(isUser ? "bg-neutral-700 text-white" : "bg-neutral-600 text-white")}>
           {isUser ? "U" : "V"}
         </AvatarFallback>
       </Avatar>
 
       <div className={cn(
-        "max-w-[85%] md:max-w-[70%] rounded-2xl px-5 py-3 shadow-sm",
+        "max-w-[85%] md:max-w-[70%] rounded-2xl px-5 py-3 shadow-lg bg-neutral-800 text-white",
         isUser 
-          ? "bg-neutral-800 text-white rounded-tr-none" 
-          : "bg-white text-neutral-900 rounded-tl-none border border-neutral-200"
+          ? "rounded-tr-none" 
+          : "rounded-tl-none"
       )}>
         {isStreaming && !content ? (
           <div className="py-2 flex items-center justify-center">
