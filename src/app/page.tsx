@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ChatHeader } from '@/components/chat-header';
 import { ChatMessage } from '@/components/chat-message';
@@ -20,7 +21,7 @@ interface ChatSession {
   messages: Message[];
 }
 
-export default function Home() {
+function ChatContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const chatId = searchParams.get('id');
@@ -30,7 +31,6 @@ export default function Home() {
   const [currentChat, setCurrentChat] = useState<ChatSession | null>(null);
   const scrollEndRef = useRef<HTMLDivElement>(null);
 
-  // Load chat from local storage if ID is present
   useEffect(() => {
     const savedChats = localStorage.getItem('vorgawall_chats');
     if (chatId && savedChats) {
@@ -51,7 +51,6 @@ export default function Home() {
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     
-    // Process saving and response
     const activeId = saveChatToLocal(newMessages);
 
     setIsTyping(true);
@@ -71,7 +70,6 @@ export default function Home() {
     const savedChats = localStorage.getItem('vorgawall_chats');
     let chats: ChatSession[] = savedChats ? JSON.parse(savedChats) : [];
     
-    // Use existing chatId, or forceId if provided (for consecutive messages), or generate new
     const currentId = chatId || forceId || Math.random().toString(36).substring(7);
     const existingIndex = chats.findIndex(c => c.id === currentId);
 
@@ -86,7 +84,6 @@ export default function Home() {
       chats[existingIndex] = updatedChat;
     } else {
       chats.unshift(updatedChat);
-      // Only push state if we are creating a brand new session and haven't updated URL yet
       if (!chatId) {
         window.history.pushState({}, '', `?id=${currentId}`);
       }
@@ -134,7 +131,7 @@ export default function Home() {
   }, [messages, isTyping]);
 
   return (
-    <main className="relative h-screen w-full flex flex-col bg-[#F0F0F0] overflow-hidden">
+    <>
       <ChatHeader 
         title={currentChat?.title} 
         onRename={handleRename}
@@ -168,6 +165,23 @@ export default function Home() {
       </ScrollArea>
 
       <ChatInput onSendMessage={handleSendMessage} isTyping={isTyping} />
+    </>
+  );
+}
+
+export default function Home() {
+  return (
+    <main className="relative h-screen w-full flex flex-col bg-[#F0F0F0] overflow-hidden">
+      <Suspense fallback={
+        <div className="h-full w-full flex items-center justify-center bg-[#F0F0F0]">
+          <div className="animate-pulse flex flex-col items-center gap-4">
+            <div className="w-12 h-12 bg-neutral-200 rounded-2xl" />
+            <div className="h-4 w-24 bg-neutral-200 rounded-full" />
+          </div>
+        </div>
+      }>
+        <ChatContent />
+      </Suspense>
     </main>
   );
 }
