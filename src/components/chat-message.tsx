@@ -1,7 +1,11 @@
 "use client";
 
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Copy, ThumbsUp, ThumbsDown, Bot, Check } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 interface ChatMessageProps {
   role: 'user' | 'assistant';
@@ -11,6 +15,17 @@ interface ChatMessageProps {
 
 export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
   const isUser = role === 'user';
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (!content) return;
+    navigator.clipboard.writeText(content);
+    setCopied(true);
+    toast({
+      description: "Message copied to clipboard",
+    });
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className={cn(
@@ -28,19 +43,62 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
       </Avatar>
 
       <div className={cn(
-        "max-w-[85%] md:max-w-[70%] rounded-2xl px-5 py-3 shadow-lg bg-neutral-800 text-white",
-        isUser 
-          ? "rounded-tr-none" 
-          : "rounded-tl-none"
+        "flex flex-col gap-2 max-w-[85%] md:max-w-[70%]",
+        isUser ? "items-end" : "items-start"
       )}>
-        {isStreaming && !content ? (
-          <div className="py-2 flex items-center justify-center">
-            <div className="dot-flashing" />
+        <div className={cn(
+          "rounded-2xl px-5 py-3 shadow-lg bg-neutral-800 text-white w-full",
+          isUser 
+            ? "rounded-tr-none" 
+            : "rounded-tl-none"
+        )}>
+          {isStreaming && !content ? (
+            <div className="py-2 flex items-center justify-center">
+              <div className="dot-flashing" />
+            </div>
+          ) : (
+            <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+              {content}
+            </p>
+          )}
+        </div>
+
+        {!isUser && !isStreaming && content && (
+          <div className="flex items-center gap-1 mt-1 animate-in fade-in slide-in-from-top-1 duration-500">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-white/20 rounded-lg transition-colors"
+              onClick={handleCopy}
+              title="Copy message"
+            >
+              {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-white/20 rounded-lg transition-colors"
+              title="Good response"
+            >
+              <ThumbsUp className="w-4 h-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-white/20 rounded-lg transition-colors"
+              title="Bad response"
+            >
+              <ThumbsDown className="w-4 h-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-white/20 rounded-lg transition-colors"
+              title="Regenerate"
+            >
+              <Bot className="w-4 h-4" />
+            </Button>
           </div>
-        ) : (
-          <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
-            {content}
-          </p>
         )}
       </div>
     </div>
