@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from 'react';
@@ -131,15 +130,15 @@ function ChatContent() {
   }, [messages, isTyping]);
 
   return (
-    <>
+    <div className="flex-1 flex flex-col min-h-0 relative">
       <ChatHeader 
         title={currentChat?.title} 
         onRename={handleRename}
         onDelete={handleDelete}
       />
       
-      <ScrollArea className="flex-1 pt-20 pb-40">
-        <div className="max-w-4xl mx-auto px-4 md:px-8">
+      <ScrollArea className="flex-1 min-h-0">
+        <div className="max-w-4xl mx-auto px-4 md:px-8 pt-24 pb-44">
           {messages.length === 0 ? (
             <ChatWelcome />
           ) : (
@@ -165,13 +164,13 @@ function ChatContent() {
       </ScrollArea>
 
       <ChatInput onSendMessage={handleSendMessage} isTyping={isTyping} />
-    </>
+    </div>
   );
 }
 
 export default function Home() {
   return (
-    <main className="relative h-screen w-full flex flex-col bg-[#F0F0F0] overflow-hidden">
+    <main className="h-screen w-full flex flex-col bg-[#F0F0F0] overflow-hidden fixed inset-0">
       <Suspense fallback={
         <div className="h-full w-full flex items-center justify-center bg-[#F0F0F0]">
           <div className="animate-pulse flex flex-col items-center gap-4">

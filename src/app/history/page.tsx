@@ -50,9 +50,9 @@ export default function HistoryPage() {
   };
 
   return (
-    <main className="h-screen w-full flex flex-col bg-[#F0F0F0]">
+    <main className="h-screen w-full flex flex-col bg-[#F0F0F0] overflow-hidden">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-[#F0F0F0]/80 backdrop-blur-md border-b border-neutral-200">
+      <header className="flex-none flex items-center justify-between px-6 py-4 bg-[#F0F0F0]/80 backdrop-blur-md border-b border-neutral-200">
         <div className="flex items-center gap-4">
           <Link href="/">
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-neutral-200">
@@ -64,8 +64,8 @@ export default function HistoryPage() {
       </header>
 
       {/* Content */}
-      <ScrollArea className="flex-1 pt-24 pb-10 px-4 md:px-8">
-        <div className="max-w-4xl mx-auto space-y-4">
+      <ScrollArea className="flex-1 px-4 md:px-8 py-6">
+        <div className="max-w-4xl mx-auto space-y-4 pb-10">
           {chats.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
               <MessageSquare className="w-12 h-12 mb-4 opacity-20" />
@@ -138,12 +138,12 @@ export default function HistoryPage() {
               </div>
             ))
           )}
+          
+          <p className="text-[10px] text-[#0a0a0a] text-center mt-12 uppercase tracking-[0.2em] font-bold opacity-70">
+            Vorgawall Shop • Local Storage Active
+          </p>
         </div>
       </ScrollArea>
-      
-      <p className="text-[10px] text-[#0a0a0a] text-center mb-8 uppercase tracking-[0.2em] font-bold opacity-70">
-        Vorgawall Shop • Local Storage Active
-      </p>
     </main>
   );
 }
