@@ -101,7 +101,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
         </div>
         
         <p className="text-[10px] text-[#0a0a0a] text-center mt-4 uppercase tracking-[0.2em] font-bold opacity-70">
-          Powered by Vorgawall AI • Demo Version
+          Powered by Vorgawall Shop • Demo Version
         </p>
       </div>
     </div>
