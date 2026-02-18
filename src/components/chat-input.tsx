@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -34,7 +35,6 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
 
   const handleSubmit = () => {
     if (value.trim() || attachments.length > 0) {
-      // In a real app, you'd send attachments too
       onSendMessage(value);
       setValue('');
       setAttachments([]);
@@ -63,7 +63,6 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
       setAttachments(prev => [...prev, newAttachment]);
     });
     
-    // Reset input
     e.target.value = '';
   };
 
@@ -84,7 +83,6 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
     <div className="fixed bottom-0 left-0 right-0 p-4 md:p-8 bg-gradient-to-t from-[#F0F0F0] via-[#F0F0F0] to-transparent pointer-events-none">
       <div className="max-w-4xl mx-auto w-full pointer-events-auto">
         
-        {/* Hidden Inputs */}
         <input 
           type="file" 
           ref={cameraInputRef} 
@@ -112,11 +110,10 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
         
         <div className="bg-[#171717] rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] overflow-hidden p-4 md:p-5 flex flex-col gap-2 transition-all duration-300 border border-white/5">
           
-          {/* Preview Area */}
           {attachments.length > 0 && (
-            <div className="flex flex-wrap gap-3 mb-2 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="flex flex-row overflow-x-auto gap-3 mb-2 pb-2 scrollbar-hide animate-in fade-in slide-in-from-top-2 duration-300">
               {attachments.map((file) => (
-                <div key={file.id} className="relative group">
+                <div key={file.id} className="relative flex-shrink-0 group">
                   <div className="w-20 h-20 rounded-2xl overflow-hidden border border-white/10 bg-neutral-800 flex items-center justify-center shadow-lg">
                     {file.type === 'image' ? (
                       <img src={file.url} alt="preview" className="w-full h-full object-cover" />
@@ -129,7 +126,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                   </div>
                   <button 
                     onClick={() => removeAttachment(file.id)}
-                    className="absolute -top-2 -right-2 bg-neutral-900 text-white rounded-full p-1 shadow-md border border-white/20 hover:bg-neutral-700 transition-colors"
+                    className="absolute -top-1 -right-1 bg-neutral-900 text-white rounded-full p-1 shadow-md border border-white/20 hover:bg-neutral-700 transition-colors z-10"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -138,7 +135,6 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
             </div>
           )}
 
-          {/* Top Row: Input Area */}
           <textarea
             ref={textareaRef}
             rows={1}
@@ -149,7 +145,6 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
             className="w-full bg-transparent border-none focus:ring-0 focus:outline-none outline-none resize-none max-h-40 p-0 text-white placeholder:text-neutral-500 font-body text-lg leading-relaxed shadow-none"
           />
 
-          {/* Bottom Row: Actions */}
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-3">
               <DropdownMenu 
