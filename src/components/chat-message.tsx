@@ -1,4 +1,3 @@
-
 "use client";
 
 import { cn } from '@/lib/utils';
@@ -18,9 +17,12 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
       "flex w-full gap-4 mb-6 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2",
       isUser ? "flex-row-reverse" : "flex-row"
     )}>
-      <Avatar className="w-8 h-8 shrink-0 border border-neutral-200 shadow-sm">
-        <AvatarImage src={isUser ? "" : "https://picsum.photos/seed/vorg/32/32"} />
-        <AvatarFallback className={cn(isUser ? "bg-neutral-700 text-white" : "bg-neutral-600 text-white")}>
+      <Avatar className="w-8 h-8 shrink-0 border border-neutral-200 shadow-sm bg-white overflow-hidden">
+        <AvatarImage 
+          src={isUser ? "" : "https://0xjfocldlbtienb8.public.blob.vercel-storage.com/file_000000006a147206ae541ccfce29fda9%20%281%29.png"} 
+          className="object-contain p-1"
+        />
+        <AvatarFallback className={cn(isUser ? "bg-neutral-700 text-white" : "bg-white text-black")}>
           {isUser ? "U" : "V"}
         </AvatarFallback>
       </Avatar>

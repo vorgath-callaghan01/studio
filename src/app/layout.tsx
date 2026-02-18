@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  icons: {
+    icon: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png',
+    apple: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png',
+    shortcut: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png',
+  },
   openGraph: {
     title: 'Basic Chatbot by Vorgawall Shop',
     description: 'A professional-grade AI chat interface with local persistence and modern design.',
@@ -23,12 +28,18 @@ export const metadata: Metadata = {
     siteName: 'Basic Chatbot',
     locale: 'en_US',
     type: 'website',
+    images: [{
+      url: 'https://0xjfocldlbtienb8.public.blob.vercel-storage.com/file_000000006a147206ae541ccfce29fda9%20%281%29.png',
+      width: 800,
+      height: 600,
+    }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Basic Chatbot by Vorgawall Shop',
     description: 'A professional-grade AI chat interface with local persistence and modern design.',
     creator: '@vorgawall',
+    images: ['https://0xjfocldlbtienb8.public.blob.vercel-storage.com/file_000000006a147206ae541ccfce29fda9%20%281%29.png'],
   },
   robots: {
     index: true,
@@ -54,6 +65,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link rel="icon" href="https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href="https://0xjfocldlbtienb8.public.blob.vercel-storage.com/apple-touch-icon.png" />
       </head>
       <body className="font-body antialiased bg-[#F0F0F0] text-[#0a0a0a]">
         {children}
