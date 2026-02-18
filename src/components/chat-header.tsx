@@ -68,7 +68,8 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
           </div>
         </div>
         
-        <DropdownMenu>
+        {/* Set modal={false} to prevent pointer-events locking issues */}
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button 
               variant="ghost" 
@@ -78,10 +79,15 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
               <MoreHorizontal className="w-6 h-6" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-xl">
+          <DropdownMenuContent 
+            align="end" 
+            className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-xl z-[60]"
+            onCloseAutoFocus={(e) => e.preventDefault()}
+          >
             <DropdownMenuItem 
               className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
-              onSelect={() => {
+              onSelect={(e) => {
+                e.preventDefault();
                 setTempTitle(title || '');
                 setShowRenameDialog(true);
               }}
@@ -90,20 +96,26 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
               <Pencil className="w-4 h-4 text-neutral-400" />
               <span className="font-medium text-neutral-100">Rename</span>
             </DropdownMenuItem>
+            
             <Link href="/history">
               <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
                 <History className="w-4 h-4 text-neutral-400" />
                 <span className="font-medium text-neutral-100">History Chat</span>
               </DropdownMenuItem>
             </Link>
+
             <DropdownMenuItem 
               className="rounded-2xl gap-3 py-3 cursor-pointer text-destructive focus:text-destructive hover:bg-neutral-700 focus:bg-neutral-700"
-              onSelect={() => setShowDeleteAlert(true)}
+              onSelect={(e) => {
+                e.preventDefault();
+                setShowDeleteAlert(true);
+              }}
               disabled={!title}
             >
               <Trash2 className="w-4 h-4" />
               <span className="font-medium">Delete</span>
             </DropdownMenuItem>
+
             <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
               <Bug className="w-4 h-4 text-neutral-400" />
               <span className="font-medium text-neutral-100">Reports bug</span>
@@ -114,7 +126,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
 
       {/* Rename Dialog */}
       <Dialog open={showRenameDialog} onOpenChange={setShowRenameDialog}>
-        <DialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6">
+        <DialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[70]">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold">Rename Chat</DialogTitle>
           </DialogHeader>
@@ -136,7 +148,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
 
       {/* Delete Alert Dialog */}
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
-        <AlertDialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6">
+        <AlertDialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[70]">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-bold">Delete Conversation</AlertDialogTitle>
             <AlertDialogDescription className="text-neutral-500">
@@ -144,7 +156,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 mt-4">
-            <AlertDialogCancel className="rounded-full border-neutral-200">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-full border-neutral-200" onClick={() => setShowDeleteAlert(false)}>Cancel</AlertDialogCancel>
             <AlertDialogAction 
               className="rounded-full bg-destructive text-white hover:bg-destructive/90"
               onClick={() => {
