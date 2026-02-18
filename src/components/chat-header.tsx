@@ -33,22 +33,22 @@ export function ChatHeader() {
             <MoreHorizontal className="w-6 h-6" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="rounded-3xl p-2 min-w-[180px] bg-white border-neutral-200 shadow-xl">
-          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
-            <Pencil className="w-4 h-4 text-neutral-500" />
-            <span className="font-medium text-neutral-700">Rename</span>
+        <DropdownMenuContent align="end" className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-xl">
+          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+            <Pencil className="w-4 h-4 text-neutral-400" />
+            <span className="font-medium text-neutral-100">Rename</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
-            <History className="w-4 h-4 text-neutral-500" />
-            <span className="font-medium text-neutral-700">History Chat</span>
+          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+            <History className="w-4 h-4 text-neutral-400" />
+            <span className="font-medium text-neutral-100">History Chat</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer text-destructive focus:text-destructive">
+          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer text-destructive focus:text-destructive hover:bg-neutral-700 focus:bg-neutral-700">
             <Trash2 className="w-4 h-4" />
             <span className="font-medium">Delete</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
-            <Bug className="w-4 h-4 text-neutral-500" />
-            <span className="font-medium text-neutral-700">Reports bug</span>
+          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+            <Bug className="w-4 h-4 text-neutral-400" />
+            <span className="font-medium text-neutral-100">Reports bug</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

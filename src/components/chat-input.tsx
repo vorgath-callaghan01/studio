@@ -70,18 +70,18 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                     <Plus className="w-5 h-5" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-white border-neutral-200 shadow-2xl mb-2">
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
-                    <Camera className="w-4 h-4 text-neutral-500" />
-                    <span className="font-medium text-neutral-700">Camera</span>
+                <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-2xl mb-2">
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                    <Camera className="w-4 h-4 text-neutral-400" />
+                    <span className="font-medium text-neutral-100">Camera</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
-                    <ImageIcon className="w-4 h-4 text-neutral-500" />
-                    <span className="font-medium text-neutral-700">Upload image</span>
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                    <ImageIcon className="w-4 h-4 text-neutral-400" />
+                    <span className="font-medium text-neutral-100">Upload image</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
-                    <FileUp className="w-4 h-4 text-neutral-500" />
-                    <span className="font-medium text-neutral-700">Upload file</span>
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                    <FileUp className="w-4 h-4 text-neutral-400" />
+                    <span className="font-medium text-neutral-100">Upload file</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -95,18 +95,18 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                     <Settings2 className="w-5 h-5" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-white border-neutral-200 shadow-2xl mb-2">
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
-                    <Search className="w-4 h-4 text-neutral-500" />
-                    <span className="font-medium text-neutral-700">Search</span>
+                <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-2xl mb-2">
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                    <Search className="w-4 h-4 text-neutral-400" />
+                    <span className="font-medium text-neutral-100">Search</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
-                    <Sparkles className="w-4 h-4 text-neutral-500" />
-                    <span className="font-medium text-neutral-700">Image Generate</span>
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                    <Sparkles className="w-4 h-4 text-neutral-400" />
+                    <span className="font-medium text-neutral-100">Image Generate</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
-                    <FileText className="w-4 h-4 text-neutral-500" />
-                    <span className="font-medium text-neutral-700">Create Articles</span>
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                    <FileText className="w-4 h-4 text-neutral-400" />
+                    <span className="font-medium text-neutral-100">Create Articles</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
