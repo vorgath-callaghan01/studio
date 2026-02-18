@@ -52,6 +52,7 @@ export default function HistoryPage() {
     setShowDeleteAlert(false);
     toast({
       description: "Conversation deleted successfully.",
+      className: "rounded-3xl bg-neutral-800 text-white border-neutral-700 shadow-2xl p-5",
     });
   };
 
@@ -61,6 +62,7 @@ export default function HistoryPage() {
     setShowClearAllAlert(false);
     toast({
       description: "All chat history cleared.",
+      className: "rounded-3xl bg-neutral-800 text-white border-neutral-700 shadow-2xl p-5",
     });
   };
 
@@ -159,15 +161,15 @@ export default function HistoryPage() {
 
       {/* Delete Single Chat Alert */}
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
-        <AlertDialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[100]">
+        <AlertDialogContent className="rounded-3xl border-neutral-700 bg-neutral-800 text-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[100]">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold">Delete Conversation</AlertDialogTitle>
-            <AlertDialogDescription className="text-neutral-500">
+            <AlertDialogTitle className="text-xl font-bold text-white">Delete Conversation</AlertDialogTitle>
+            <AlertDialogDescription className="text-neutral-400">
               Are you sure you want to permanently delete this conversation? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 mt-4">
-            <AlertDialogCancel className="rounded-full border-neutral-200">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-full border-neutral-700 text-white hover:bg-white/10">Cancel</AlertDialogCancel>
             <AlertDialogAction 
               className="rounded-full bg-destructive text-white hover:bg-destructive/90"
               onClick={confirmDelete}
@@ -180,18 +182,18 @@ export default function HistoryPage() {
 
       {/* Clear All Chats Alert */}
       <AlertDialog open={showClearAllAlert} onOpenChange={setShowClearAllAlert}>
-        <AlertDialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[100]">
+        <AlertDialogContent className="rounded-3xl border-neutral-700 bg-neutral-800 text-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[100]">
           <AlertDialogHeader className="flex flex-col items-center text-center">
             <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
               <AlertCircle className="w-6 h-6 text-destructive" />
             </div>
-            <AlertDialogTitle className="text-xl font-bold">Clear All History</AlertDialogTitle>
-            <AlertDialogDescription className="text-neutral-500">
+            <AlertDialogTitle className="text-xl font-bold text-white">Clear All History</AlertDialogTitle>
+            <AlertDialogDescription className="text-neutral-400">
               This will permanently delete ALL your chat history. Are you absolutely sure?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 mt-6 sm:justify-center">
-            <AlertDialogCancel className="rounded-full border-neutral-200 flex-1">Keep History</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-full border-neutral-700 text-white hover:bg-white/10 flex-1">Keep History</AlertDialogCancel>
             <AlertDialogAction 
               className="rounded-full bg-destructive text-white hover:bg-destructive/90 flex-1"
               onClick={confirmClearAll}

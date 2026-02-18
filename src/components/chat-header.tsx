@@ -60,6 +60,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
       toast({
         title: "Report Submitted",
         description: "Thank you for your feedback! Our team will look into it.",
+        className: "rounded-3xl bg-neutral-800 text-white border-neutral-700 shadow-2xl p-5",
       });
       setBugSubject('');
       setBugDescription('');
@@ -93,7 +94,6 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
           </div>
         </div>
         
-        {/* modal={false} is critical to prevent pointer-events locking issues */}
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button 
@@ -157,37 +157,37 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
 
       {/* Rename Dialog */}
       <Dialog open={showRenameDialog} onOpenChange={setShowRenameDialog}>
-        <DialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[70]">
+        <DialogContent className="rounded-3xl border-neutral-700 bg-neutral-800 text-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[70]">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Rename Chat</DialogTitle>
+            <DialogTitle className="text-xl font-bold text-white">Rename Chat</DialogTitle>
           </DialogHeader>
           <div className="py-4">
             <Input 
               value={tempTitle}
               onChange={(e) => setTempTitle(e.target.value)}
               placeholder="Enter new title..."
-              className="rounded-2xl border-neutral-200 focus:ring-0 focus-visible:ring-0"
+              className="rounded-2xl border-neutral-700 bg-neutral-900 text-white focus:ring-0 focus-visible:ring-0"
               onKeyDown={(e) => e.key === 'Enter' && handleRenameSubmit()}
             />
           </div>
           <DialogFooter className="gap-2">
-            <Button variant="ghost" className="rounded-full" onClick={() => setShowRenameDialog(false)}>Cancel</Button>
-            <Button className="rounded-full bg-[#171717] hover:bg-[#262626] text-white" onClick={handleRenameSubmit}>Save</Button>
+            <Button variant="ghost" className="rounded-full text-white hover:bg-white/10" onClick={() => setShowRenameDialog(false)}>Cancel</Button>
+            <Button className="rounded-full bg-white text-black hover:bg-neutral-200" onClick={handleRenameSubmit}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Delete Alert Dialog */}
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
-        <AlertDialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[70]">
+        <AlertDialogContent className="rounded-3xl border-neutral-700 bg-neutral-800 text-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[70]">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold">Delete Conversation</AlertDialogTitle>
-            <AlertDialogDescription className="text-neutral-500">
+            <AlertDialogTitle className="text-xl font-bold text-white">Delete Conversation</AlertDialogTitle>
+            <AlertDialogDescription className="text-neutral-400">
               Are you sure you want to permanently delete this conversation? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 mt-4">
-            <AlertDialogCancel className="rounded-full border-neutral-200" onClick={() => setShowDeleteAlert(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-full border-neutral-700 text-white hover:bg-white/10" onClick={() => setShowDeleteAlert(false)}>Cancel</AlertDialogCancel>
             <AlertDialogAction 
               className="rounded-full bg-destructive text-white hover:bg-destructive/90"
               onClick={() => {
@@ -203,37 +203,37 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
 
       {/* Report Bug Dialog */}
       <Dialog open={showReportBugDialog} onOpenChange={setShowReportBugDialog}>
-        <DialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[70]">
+        <DialogContent className="rounded-3xl border-neutral-700 bg-neutral-800 text-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[70]">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Report a Bug</DialogTitle>
-            <DialogDescription className="text-neutral-500">
+            <DialogTitle className="text-xl font-bold text-white">Report a Bug</DialogTitle>
+            <DialogDescription className="text-neutral-400">
               Help us improve by describing the issue you encountered.
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-4">
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-neutral-400">Subject</label>
+              <label className="text-xs font-bold uppercase tracking-wider text-neutral-500">Subject</label>
               <Input 
                 value={bugSubject}
                 onChange={(e) => setBugSubject(e.target.value)}
                 placeholder="What went wrong?"
-                className="rounded-2xl border-neutral-200 focus:ring-0 focus-visible:ring-0"
+                className="rounded-2xl border-neutral-700 bg-neutral-900 text-white focus:ring-0 focus-visible:ring-0"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-neutral-400">Description</label>
+              <label className="text-xs font-bold uppercase tracking-wider text-neutral-500">Description</label>
               <Textarea 
                 value={bugDescription}
                 onChange={(e) => setBugDescription(e.target.value)}
                 placeholder="Provide as much detail as possible..."
-                className="rounded-2xl border-neutral-200 focus:ring-0 focus-visible:ring-0 min-h-[120px] resize-none"
+                className="rounded-2xl border-neutral-700 bg-neutral-900 text-white focus:ring-0 focus-visible:ring-0 min-h-[120px] resize-none"
               />
             </div>
           </div>
           <DialogFooter className="gap-2">
-            <Button variant="ghost" className="rounded-full" onClick={() => setShowReportBugDialog(false)}>Cancel</Button>
+            <Button variant="ghost" className="rounded-full text-white hover:bg-white/10" onClick={() => setShowReportBugDialog(false)}>Cancel</Button>
             <Button 
-              className="rounded-full bg-[#171717] hover:bg-[#262626] text-white" 
+              className="rounded-full bg-white text-black hover:bg-neutral-200" 
               onClick={handleReportBugSubmit}
             >
               Submit Report

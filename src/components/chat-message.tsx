@@ -26,6 +26,7 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
   const isUser = role === 'user';
   const [copied, setCopied] = useState(false);
   const [showDislikeDialog, setShowDislikeDialog] = useState(false);
+  const [showModelInfoDialog, setShowModelInfoDialog] = useState(false);
   const [dislikeReason, setDislikeReason] = useState('');
 
   const handleCopy = () => {
@@ -34,6 +35,7 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
     setCopied(true);
     toast({
       description: "Message copied to clipboard",
+      className: "rounded-3xl bg-neutral-800 text-white border-neutral-700 shadow-2xl p-5",
     });
     setTimeout(() => setCopied(false), 2000);
   };
@@ -132,7 +134,8 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
                 variant="ghost" 
                 size="icon" 
                 className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-white/20 rounded-lg transition-colors"
-                title="Regenerate"
+                title="Model Info"
+                onClick={() => setShowModelInfoDialog(true)}
               >
                 <Bot className="w-4 h-4" />
               </Button>
@@ -143,10 +146,10 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
 
       {/* Dislike Feedback Dialog */}
       <Dialog open={showDislikeDialog} onOpenChange={setShowDislikeDialog}>
-        <DialogContent className="rounded-3xl border-neutral-200 bg-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[100]">
+        <DialogContent className="rounded-3xl border-neutral-700 bg-neutral-800 text-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[100]">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Feedback</DialogTitle>
-            <DialogDescription className="text-neutral-500">
+            <DialogTitle className="text-xl font-bold text-white">Feedback</DialogTitle>
+            <DialogDescription className="text-neutral-400">
               Why did you dislike our chatbot? Please provide your reason 🙏🏼🥺
             </DialogDescription>
           </DialogHeader>
@@ -155,16 +158,44 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
               value={dislikeReason}
               onChange={(e) => setDislikeReason(e.target.value)}
               placeholder="Your reason..."
-              className="rounded-2xl border-neutral-200 focus:ring-0 focus:outline-none focus-visible:ring-0 min-h-[100px] resize-none"
+              className="rounded-2xl border-neutral-700 bg-neutral-900 text-white focus:ring-0 focus:outline-none focus-visible:ring-0 min-h-[100px] resize-none"
             />
           </div>
           <DialogFooter className="gap-2">
-            <Button variant="ghost" className="rounded-full" onClick={() => setShowDislikeDialog(false)}>Cancel</Button>
+            <Button variant="ghost" className="rounded-full text-white hover:bg-white/10" onClick={() => setShowDislikeDialog(false)}>Cancel</Button>
             <Button 
-              className="rounded-full bg-[#171717] hover:bg-[#262626] text-white" 
+              className="rounded-full bg-white text-black hover:bg-neutral-200" 
               onClick={handleDislikeSubmit}
             >
               Submit Feedback
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Model Info Dialog */}
+      <Dialog open={showModelInfoDialog} onOpenChange={setShowModelInfoDialog}>
+        <DialogContent className="rounded-3xl border-neutral-700 bg-neutral-800 text-white max-w-[90vw] md:max-w-md mx-auto p-6 z-[100]">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-white">AI Model Information</DialogTitle>
+            <DialogDescription className="text-neutral-400">
+              This is where you display the AI model being used, transparency is number 1 in business 🙏🏼☺️
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-6 flex flex-col items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center">
+              <Bot className="w-8 h-8 text-white" />
+            </div>
+            <p className="text-center text-sm text-neutral-300">
+              Current Model: <span className="font-bold text-white">Vorgawall LLM v2.5</span>
+            </p>
+          </div>
+          <DialogFooter>
+            <Button 
+              className="rounded-full bg-white text-black hover:bg-neutral-200 w-full" 
+              onClick={() => setShowModelInfoDialog(false)}
+            >
+              Got it
             </Button>
           </DialogFooter>
         </DialogContent>
