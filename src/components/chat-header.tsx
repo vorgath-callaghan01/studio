@@ -1,6 +1,14 @@
+"use client";
+
 import Link from 'next/link';
-import { ArrowLeft, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, MoreHorizontal, Pencil, History, Trash2, Bug } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function ChatHeader() {
   return (
@@ -15,13 +23,35 @@ export function ChatHeader() {
         </div>
       </div>
       
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="bg-[#171717] hover:bg-[#262626] text-white hover:text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors active:text-white"
-      >
-        <MoreHorizontal className="w-6 h-6" />
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="bg-[#171717] hover:bg-[#262626] text-white hover:text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors focus:ring-0 focus-visible:ring-0"
+          >
+            <MoreHorizontal className="w-6 h-6" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="rounded-3xl p-2 min-w-[180px] bg-white border-neutral-200 shadow-xl">
+          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
+            <Pencil className="w-4 h-4 text-neutral-500" />
+            <span className="font-medium text-neutral-700">Rename</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
+            <History className="w-4 h-4 text-neutral-500" />
+            <span className="font-medium text-neutral-700">History Chat</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer text-destructive focus:text-destructive">
+            <Trash2 className="w-4 h-4" />
+            <span className="font-medium">Delete</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
+            <Bug className="w-4 h-4 text-neutral-500" />
+            <span className="font-medium text-neutral-700">Reports bug</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </header>
   );
 }

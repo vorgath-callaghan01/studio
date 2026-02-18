@@ -1,8 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Plus, Settings2, AudioLines, ArrowUp } from 'lucide-react';
+import { Plus, Settings2, AudioLines, ArrowUp, Camera, Image as ImageIcon, FileUp, Search, Sparkles, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface ChatInputProps {
   onSendMessage: (msg: string) => void;
@@ -55,23 +61,58 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
           {/* Bottom Row: Actions */}
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-3">
-              <button 
-                type="button"
-                className="rounded-full w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
-              >
-                <Plus className="w-5 h-5" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button 
+                    type="button"
+                    className="rounded-full w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+                  >
+                    <Plus className="w-5 h-5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-white border-neutral-200 shadow-2xl mb-2">
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
+                    <Camera className="w-4 h-4 text-neutral-500" />
+                    <span className="font-medium text-neutral-700">Camera</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
+                    <ImageIcon className="w-4 h-4 text-neutral-500" />
+                    <span className="font-medium text-neutral-700">Upload image</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
+                    <FileUp className="w-4 h-4 text-neutral-500" />
+                    <span className="font-medium text-neutral-700">Upload file</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               
-              <button 
-                type="button"
-                className="rounded-full w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
-              >
-                <Settings2 className="w-5 h-5" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button 
+                    type="button"
+                    className="rounded-full w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+                  >
+                    <Settings2 className="w-5 h-5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-white border-neutral-200 shadow-2xl mb-2">
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
+                    <Search className="w-4 h-4 text-neutral-500" />
+                    <span className="font-medium text-neutral-700">Search</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
+                    <Sparkles className="w-4 h-4 text-neutral-500" />
+                    <span className="font-medium text-neutral-700">Image Generate</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer">
+                    <FileText className="w-4 h-4 text-neutral-500" />
+                    <span className="font-medium text-neutral-700">Create Articles</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             <div className="relative w-10 h-10 flex items-center justify-center">
-              {/* Transition between AudioLines and ArrowUp */}
               <button
                 onClick={handleSubmit}
                 disabled={!hasText}
