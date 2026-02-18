@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
@@ -17,7 +19,7 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
     )}>
       <Avatar className="w-8 h-8 shrink-0 border border-neutral-200 shadow-sm">
         <AvatarImage src={isUser ? "" : "https://picsum.photos/seed/vorg/32/32"} />
-        <AvatarFallback className={cn(isUser ? "bg-neutral-200 text-neutral-600" : "bg-neutral-800 text-white")}>
+        <AvatarFallback className={cn(isUser ? "bg-neutral-800 text-white" : "bg-neutral-200 text-neutral-600")}>
           {isUser ? "U" : "V"}
         </AvatarFallback>
       </Avatar>
@@ -25,8 +27,8 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
       <div className={cn(
         "max-w-[85%] md:max-w-[70%] rounded-2xl px-5 py-3 shadow-sm",
         isUser 
-          ? "bg-white text-neutral-900 rounded-tr-none border border-neutral-200" 
-          : "bg-neutral-800 text-white rounded-tl-none"
+          ? "bg-neutral-800 text-white rounded-tr-none" 
+          : "bg-white text-neutral-900 rounded-tl-none border border-neutral-200"
       )}>
         {isStreaming && !content ? (
           <div className="py-2 flex items-center justify-center">
