@@ -19,6 +19,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const [value, setValue] = useState('');
   const [openMenu, setOpenMenu] = useState<'plus' | 'settings' | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = () => {
     if (value.trim()) {
@@ -46,6 +47,22 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 p-4 md:p-8 bg-gradient-to-t from-[#F0F0F0] via-[#F0F0F0] to-transparent pointer-events-none">
       <div className="max-w-4xl mx-auto w-full pointer-events-auto">
+        
+        {/* Hidden Camera Input to trigger native camera app */}
+        <input 
+          type="file" 
+          ref={cameraInputRef} 
+          accept="image/*" 
+          capture="environment" 
+          className="hidden" 
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              // Placeholder: In a real app, you would handle the captured photo here
+              console.log("Photo captured:", file.name);
+            }
+          }}
+        />
         
         <div className="bg-[#171717] rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] overflow-hidden p-4 md:p-5 flex flex-col gap-2 transition-all duration-300 border border-white/5">
           {/* Top Row: Input Area */}
@@ -75,7 +92,10 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-2xl mb-2">
-                  <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                  <DropdownMenuItem 
+                    className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
+                    onClick={() => cameraInputRef.current?.click()}
+                  >
                     <Camera className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Camera</span>
                   </DropdownMenuItem>
