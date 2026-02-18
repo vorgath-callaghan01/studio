@@ -162,7 +162,7 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
             />
           </div>
           <DialogFooter className="gap-2">
-            <Button variant="ghost" className="rounded-full text-white hover:bg-white/10" onClick={() => setShowDislikeDialog(false)}>Cancel</Button>
+            <Button variant="ghost" className="rounded-full bg-white text-black hover:bg-neutral-200" onClick={() => setShowDislikeDialog(false)}>Cancel</Button>
             <Button 
               className="rounded-full bg-white text-black hover:bg-neutral-200" 
               onClick={handleDislikeSubmit}

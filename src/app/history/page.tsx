@@ -169,9 +169,9 @@ export default function HistoryPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 mt-4">
-            <AlertDialogCancel className="rounded-full border-neutral-700 text-white hover:bg-white/10">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-full bg-white text-black hover:bg-neutral-200 border-none">Cancel</AlertDialogCancel>
             <AlertDialogAction 
-              className="rounded-full bg-destructive text-white hover:bg-destructive/90"
+              className="rounded-full bg-destructive text-white hover:bg-destructive/90 border-none"
               onClick={confirmDelete}
             >
               Delete
@@ -193,9 +193,9 @@ export default function HistoryPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 mt-6 sm:justify-center">
-            <AlertDialogCancel className="rounded-full border-neutral-700 text-white hover:bg-white/10 flex-1">Keep History</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-full bg-white text-black hover:bg-neutral-200 border-none flex-1">Keep History</AlertDialogCancel>
             <AlertDialogAction 
-              className="rounded-full bg-destructive text-white hover:bg-destructive/90 flex-1"
+              className="rounded-full bg-destructive text-white hover:bg-destructive/90 border-none flex-1"
               onClick={confirmClearAll}
             >
               Yes, Clear All

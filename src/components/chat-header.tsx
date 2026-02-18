@@ -171,7 +171,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
             />
           </div>
           <DialogFooter className="gap-2">
-            <Button variant="ghost" className="rounded-full text-white hover:bg-white/10" onClick={() => setShowRenameDialog(false)}>Cancel</Button>
+            <Button variant="ghost" className="rounded-full bg-white text-black hover:bg-neutral-200" onClick={() => setShowRenameDialog(false)}>Cancel</Button>
             <Button className="rounded-full bg-white text-black hover:bg-neutral-200" onClick={handleRenameSubmit}>Save</Button>
           </DialogFooter>
         </DialogContent>
@@ -187,9 +187,9 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 mt-4">
-            <AlertDialogCancel className="rounded-full border-neutral-700 text-white hover:bg-white/10" onClick={() => setShowDeleteAlert(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-full bg-white text-black hover:bg-neutral-200 border-none" onClick={() => setShowDeleteAlert(false)}>Cancel</AlertDialogCancel>
             <AlertDialogAction 
-              className="rounded-full bg-destructive text-white hover:bg-destructive/90"
+              className="rounded-full bg-destructive text-white hover:bg-destructive/90 border-none"
               onClick={() => {
                 if (onDelete) onDelete();
                 setShowDeleteAlert(false);
@@ -231,7 +231,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
             </div>
           </div>
           <DialogFooter className="gap-2">
-            <Button variant="ghost" className="rounded-full text-white hover:bg-white/10" onClick={() => setShowReportBugDialog(false)}>Cancel</Button>
+            <Button variant="ghost" className="rounded-full bg-white text-black hover:bg-neutral-200" onClick={() => setShowReportBugDialog(false)}>Cancel</Button>
             <Button 
               className="rounded-full bg-white text-black hover:bg-neutral-200" 
               onClick={handleReportBugSubmit}
