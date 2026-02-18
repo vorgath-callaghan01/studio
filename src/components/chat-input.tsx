@@ -17,6 +17,7 @@ interface ChatInputProps {
 
 export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const [value, setValue] = useState('');
+  const [openMenu, setOpenMenu] = useState<'plus' | 'settings' | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = () => {
@@ -61,7 +62,10 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
           {/* Bottom Row: Actions */}
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-3">
-              <DropdownMenu>
+              <DropdownMenu 
+                open={openMenu === 'plus'} 
+                onOpenChange={(open) => setOpenMenu(open ? 'plus' : null)}
+              >
                 <DropdownMenuTrigger asChild>
                   <button 
                     type="button"
@@ -86,7 +90,10 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              <DropdownMenu>
+              <DropdownMenu 
+                open={openMenu === 'settings'} 
+                onOpenChange={(open) => setOpenMenu(open ? 'settings' : null)}
+              >
                 <DropdownMenuTrigger asChild>
                   <button 
                     type="button"
