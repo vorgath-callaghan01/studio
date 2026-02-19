@@ -1,10 +1,12 @@
 # Software License Agreement
 
+Effective Date: The date on which the Licensee purchases the Software.
+
 **Product:** Basic Chatbot 
 **Brand:** Vorgawall Shop  
 **License Type:** Single Developer License  
 
-This Software License Agreement ("Agreement") is a legal agreement between you ("License") and **Vorgawall Shop** ("Licensor") for the **Basic Chatbot** source code ("Software").
+This Software License Agreement ("Agreement") is a legal agreement between you ("Licensee") and **Vorgawall Shop** ("Licensor") for the **Basic Chatbot** source code ("Software").
 
 ### 1. Grant of License
 Licensor grants you a non-exclusive, non-transferable, worldwide license to:
@@ -35,6 +37,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ### 6. Termination
 This license will terminate automatically and immediately if you violate any of its terms. Upon termination, you must cease all use of the Software and delete all copies of the source code in your possession.
+
+7. Intellectual Property
+
+The Software, including all source code, design, structure, and related materials, remains the exclusive intellectual property of Vorgawall Shop. This Agreement does not grant ownership rights, only usage rights.
+
+This Agreement shall be governed and construed in accordance with the laws of Indonesia.
 
 ---
 © 2026 Vorgawall Shop. All rights reserved.
