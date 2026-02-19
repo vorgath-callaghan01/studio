@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, MoreHorizontal, Pencil, History, Trash2, Bug } from 'lucide-react';
+import { ArrowLeft, MoreHorizontal, Pencil, History, Trash2, Bug, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -129,17 +129,12 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
               </DropdownMenuItem>
             </Link>
 
-            <DropdownMenuItem 
-              className="rounded-2xl gap-3 py-3 cursor-pointer text-destructive focus:text-destructive hover:bg-neutral-700 focus:bg-neutral-700"
-              onSelect={(e) => {
-                e.preventDefault();
-                setShowDeleteAlert(true);
-              }}
-              disabled={!title}
-            >
-              <Trash2 className="w-4 h-4" />
-              <span className="font-medium">Delete</span>
-            </DropdownMenuItem>
+            <Link href="/license">
+              <DropdownMenuItem className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700">
+                <ShieldCheck className="w-4 h-4 text-neutral-400" />
+                <span className="font-medium text-neutral-100">License</span>
+              </DropdownMenuItem>
+            </Link>
 
             <DropdownMenuItem 
               className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
@@ -150,6 +145,18 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
             >
               <Bug className="w-4 h-4 text-neutral-400" />
               <span className="font-medium text-neutral-100">Reports bug</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem 
+              className="rounded-2xl gap-3 py-3 cursor-pointer text-destructive focus:text-destructive hover:bg-neutral-700 focus:bg-neutral-700"
+              onSelect={(e) => {
+                e.preventDefault();
+                setShowDeleteAlert(true);
+              }}
+              disabled={!title}
+            >
+              <Trash2 className="w-4 h-4" />
+              <span className="font-medium">Delete</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -223,7 +230,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-wider text-neutral-500">Description</label>
               <Textarea 
-                value={bugDescription}
+                value={bugSubject}
                 onChange={(e) => setBugDescription(e.target.value)}
                 placeholder="Provide as much detail as possible..."
                 className="rounded-2xl border-neutral-700 bg-neutral-900 text-white focus:ring-0 focus-visible:ring-0 min-h-[120px] resize-none"

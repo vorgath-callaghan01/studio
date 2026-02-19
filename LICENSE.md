@@ -1,10 +1,10 @@
 # Software License Agreement
 
-**Product:** Basic AI Chatbot  
+**Product:** Basic Chatbot 
 **Brand:** Vorgawall Shop  
 **License Type:** Single Developer License  
 
-This Software License Agreement ("Agreement") is a legal agreement between you ("Licensee") and **Vorgawall Shop** ("Licensor") for the **Basic AI Chatbot** source code ("Software").
+This Software License Agreement ("Agreement") is a legal agreement between you ("License") and **Vorgawall Shop** ("Licensor") for the **Basic Chatbot** source code ("Software").
 
 ### 1. Grant of License
 Licensor grants you a non-exclusive, non-transferable, worldwide license to:
@@ -37,4 +37,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 This license will terminate automatically and immediately if you violate any of its terms. Upon termination, you must cease all use of the Software and delete all copies of the source code in your possession.
 
 ---
-© 2024 Vorgawall Shop. All rights reserved.
+© 2026 Vorgawall Shop. All rights reserved.
