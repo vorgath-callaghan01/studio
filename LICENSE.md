@@ -38,7 +38,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ### 6. Termination
 This license will terminate automatically and immediately if you violate any of its terms. Upon termination, you must cease all use of the Software and delete all copies of the source code in your possession.
 
-###7. Intellectual Property
+### 7. Intellectual Property
 
 The Software, including all source code, design, structure, and related materials, remains the exclusive intellectual property of Vorgawall Shop. This Agreement does not grant ownership rights, only usage rights.
 
