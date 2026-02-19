@@ -10,7 +10,7 @@ export function ChatWelcome() {
           src="https://0xjfocldlbtienb8.public.blob.vercel-storage.com/file_000000006a147206ae541ccfce29fda9%20%281%29.png"
           alt="Vorgawall Shop Logo"
           fill
-          className="object-contain p-3"
+          className="object-cover"
         />
       </div>
       <h2 className="text-3xl font-headline font-bold text-neutral-900 mb-3 tracking-tight">Hello everyone, welcome to Vorgawall Shop 👋🏻 😀.</h2>

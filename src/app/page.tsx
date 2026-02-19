@@ -180,7 +180,7 @@ export default function Home() {
                 src="https://0xjfocldlbtienb8.public.blob.vercel-storage.com/file_000000006a147206ae541ccfce29fda9%20%281%29.png"
                 alt="Loading..."
                 fill
-                className="object-contain p-3"
+                className="object-cover"
               />
             </div>
             <div className="h-4 w-24 bg-neutral-200 rounded-full" />
