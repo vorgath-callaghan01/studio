@@ -75,7 +75,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
   return (
     <>
       <div className={cn(
-        "flex w-full gap-4 mb-8 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2",
+        "flex w-full gap-3 mb-6 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2",
         isUser ? "flex-row-reverse" : "flex-row"
       )}>
         <Avatar className="w-8 h-8 shrink-0 border border-neutral-200 shadow-sm bg-white overflow-hidden mt-1">
@@ -89,31 +89,29 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
         </Avatar>
 
         <div className={cn(
-          "flex flex-col gap-2 max-w-[85%] md:max-w-[70%]",
+          "flex flex-col gap-2 max-w-[85%] md:max-w-[75%]",
           isUser ? "items-end" : "items-start"
         )}>
           <div className={cn(
-            "rounded-2xl px-5 py-3 shadow-lg flex flex-col gap-3 min-w-0 w-fit",
-            isUser 
-              ? "rounded-tr-none bg-neutral-800 text-white" 
-              : "rounded-tl-none bg-neutral-800 text-white"
+            "rounded-3xl px-6 py-4 shadow-xl flex flex-col gap-3 min-w-0 w-fit",
+            "bg-neutral-800 text-white"
           )}>
             {/* Attachments Section */}
             {attachments && attachments.length > 0 && (
-              <div className="flex flex-col gap-2 mb-1">
+              <div className="flex flex-col gap-3 mb-1">
                 {attachments.map((att) => (
                   <div key={att.id} className="max-w-full">
                     {att.type === 'image' ? (
-                      <div className="relative rounded-xl overflow-hidden border border-white/10 bg-neutral-900/50">
+                      <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-neutral-900/50">
                         <img 
                           src={att.url} 
                           alt={att.name} 
-                          className="max-h-64 w-full object-cover rounded-xl"
+                          className="max-h-72 w-full object-cover rounded-2xl"
                         />
                       </div>
                     ) : (
-                      <div className="flex items-center gap-3 bg-neutral-900/40 p-3 rounded-xl border border-white/5 backdrop-blur-sm">
-                        <div className="w-10 h-10 rounded-lg bg-neutral-700 flex items-center justify-center shrink-0">
+                      <div className="flex items-center gap-3 bg-neutral-900/40 p-3 rounded-2xl border border-white/5 backdrop-blur-sm">
+                        <div className="w-10 h-10 rounded-xl bg-neutral-700 flex items-center justify-center shrink-0">
                           <FileText className="w-5 h-5 text-neutral-300" />
                         </div>
                         <div className="flex flex-col min-w-0">
@@ -140,11 +138,11 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
           </div>
 
           {!isUser && !isStreaming && content && (
-            <div className="flex items-center gap-1 mt-1 animate-in fade-in slide-in-from-top-1 duration-500">
+            <div className="flex items-center gap-1 mt-1 animate-in fade-in slide-in-from-top-1 duration-500 px-2">
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-white/20 rounded-lg transition-colors"
+                className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-neutral-200/50 rounded-full transition-colors"
                 onClick={handleCopy}
                 title="Copy message"
               >
@@ -153,7 +151,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-white/20 rounded-lg transition-colors"
+                className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-neutral-200/50 rounded-full transition-colors"
                 title="Good response"
                 onClick={handleThumbsUp}
               >
@@ -162,7 +160,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-white/20 rounded-lg transition-colors"
+                className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-neutral-200/50 rounded-full transition-colors"
                 title="Bad response"
                 onClick={() => setShowDislikeDialog(true)}
               >
@@ -171,7 +169,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-white/20 rounded-lg transition-colors"
+                className="h-8 w-8 text-neutral-400 hover:text-[#0a0a0a] hover:bg-neutral-200/50 rounded-full transition-colors"
                 title="Model Info"
                 onClick={() => setShowModelInfoDialog(true)}
               >
