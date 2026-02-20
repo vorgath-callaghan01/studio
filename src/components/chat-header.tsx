@@ -230,7 +230,7 @@ export function ChatHeader({ title, onRename, onDelete }: ChatHeaderProps) {
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-wider text-neutral-500">Description</label>
               <Textarea 
-                value={bugSubject}
+                value={bugDescription}
                 onChange={(e) => setBugDescription(e.target.value)}
                 placeholder="Provide as much detail as possible..."
                 className="rounded-2xl border-neutral-700 bg-neutral-900 text-white focus:ring-0 focus-visible:ring-0 min-h-[120px] resize-none"

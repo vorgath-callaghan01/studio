@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, Suspense } from 'react';
+import { useState, useRef, useEffect, Suspense, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ChatHeader } from '@/components/chat-header';
@@ -55,7 +55,35 @@ function ChatContent() {
     setCurrentChat(null);
   }, [chatId]);
 
-  const handleSendMessage = (content: string, attachments?: Attachment[]) => {
+  const saveChatToLocal = useCallback((msgs: Message[], forceId?: string) => {
+    const savedChats = localStorage.getItem('vorgawall_chats');
+    let chats: ChatSession[] = savedChats ? JSON.parse(savedChats) : [];
+    
+    const currentId = chatId || forceId || Math.random().toString(36).substring(7);
+    const existingIndex = chats.findIndex(c => c.id === currentId);
+
+    const updatedChat: ChatSession = {
+      id: currentId,
+      title: currentChat?.title || msgs[0]?.content.substring(0, 30) || 'New Chat',
+      date: currentChat?.date || new Date().toLocaleString(),
+      messages: msgs
+    };
+
+    if (existingIndex > -1) {
+      chats[existingIndex] = updatedChat;
+    } else {
+      chats.unshift(updatedChat);
+      if (!chatId) {
+        window.history.pushState({}, '', `?id=${currentId}`);
+      }
+    }
+
+    setCurrentChat(updatedChat);
+    localStorage.setItem('vorgawall_chats', JSON.stringify(chats));
+    return currentId;
+  }, [chatId, currentChat]);
+
+  const handleSendMessage = useCallback((content: string, attachments?: Attachment[]) => {
     const userMsg: Message = { role: 'user', content, attachments };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
@@ -93,35 +121,7 @@ function ChatContent() {
         }
       }, 50); // Kecepatan streaming (50ms per kata)
     }, 1000);
-  };
-
-  const saveChatToLocal = (msgs: Message[], forceId?: string) => {
-    const savedChats = localStorage.getItem('vorgawall_chats');
-    let chats: ChatSession[] = savedChats ? JSON.parse(savedChats) : [];
-    
-    const currentId = chatId || forceId || Math.random().toString(36).substring(7);
-    const existingIndex = chats.findIndex(c => c.id === currentId);
-
-    const updatedChat: ChatSession = {
-      id: currentId,
-      title: currentChat?.title || msgs[0]?.content.substring(0, 30) || 'New Chat',
-      date: currentChat?.date || new Date().toLocaleString(),
-      messages: msgs
-    };
-
-    if (existingIndex > -1) {
-      chats[existingIndex] = updatedChat;
-    } else {
-      chats.unshift(updatedChat);
-      if (!chatId) {
-        window.history.pushState({}, '', `?id=${currentId}`);
-      }
-    }
-
-    setCurrentChat(updatedChat);
-    localStorage.setItem('vorgawall_chats', JSON.stringify(chats));
-    return currentId;
-  };
+  }, [messages, saveChatToLocal]);
 
   const handleRename = (newTitle: string) => {
     if (!currentChat) return;

@@ -85,7 +85,7 @@ export default function HistoryPage() {
             variant="ghost" 
             size="sm" 
             className="text-destructive hover:bg-destructive/10 rounded-full text-xs font-bold uppercase tracking-wider"
-            onClick={()={() => setShowClearAllAlert(true)}}
+            onClick={() => setShowClearAllAlert(true)}
           >
             Clear All
           </Button>

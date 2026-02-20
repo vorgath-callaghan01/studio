@@ -67,6 +67,9 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
       onSendMessage(value, attachments);
       setValue('');
       setAttachments([]);
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
     }
   };
 
@@ -99,11 +102,16 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
     setAttachments(prev => prev.filter(a => a.id !== id));
   };
 
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
     }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
   }, [value]);
 
   const hasContent = value.trim().length > 0 || attachments.length > 0;
@@ -191,21 +199,21 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                 <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-2xl mb-2">
                   <DropdownMenuItem 
                     className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
-                    onClick={() => cameraInputRef.current?.click()}
+                    onSelect={() => cameraInputRef.current?.click()}
                   >
                     <Camera className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Camera</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
-                    onClick={() => galleryInputRef.current?.click()}
+                    onSelect={() => galleryInputRef.current?.click()}
                   >
                     <ImageIcon className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Upload image</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
-                    onClick={() => fileInputRef.current?.click()}
+                    onSelect={() => fileInputRef.current?.click()}
                   >
                     <FileUp className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-100">Upload file</span>
@@ -240,21 +248,21 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                   <DropdownMenuContent side="top" align="start" className="rounded-3xl p-2 min-w-[180px] bg-neutral-800 border-neutral-700 shadow-2xl mb-2">
                     <DropdownMenuItem 
                       className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
-                      onClick={() => setActiveFeature(FEATURES.search)}
+                      onSelect={() => setActiveFeature(FEATURES.search)}
                     >
                       <Search className="w-4 h-4 text-neutral-400" />
                       <span className="font-medium text-neutral-100">Search</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
-                      onClick={() => setActiveFeature(FEATURES.image)}
+                      onSelect={() => setActiveFeature(FEATURES.image)}
                     >
                       <Sparkles className="w-4 h-4 text-neutral-400" />
                       <span className="font-medium text-neutral-100">Image Generate</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       className="rounded-2xl gap-3 py-3 cursor-pointer hover:bg-neutral-700 focus:bg-neutral-700"
-                      onClick={() => setActiveFeature(FEATURES.article)}
+                      onSelect={() => setActiveFeature(FEATURES.article)}
                     >
                       <FileText className="w-4 h-4 text-neutral-400" />
                       <span className="font-medium text-neutral-100">Create Articles</span>
@@ -267,7 +275,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
             <div className="relative w-10 h-10 flex items-center justify-center">
               <button
                 onClick={handleSubmit}
-                disabled={!hasContent}
+                disabled={!hasContent || isTyping}
                 className={cn(
                   "absolute inset-0 flex items-center justify-center rounded-full transition-all duration-500 ease-in-out focus:outline-none",
                   hasContent 
