@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -85,7 +84,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
         <Avatar className="w-8 h-8 shrink-0 border border-neutral-200 shadow-sm bg-white overflow-hidden mt-1">
           <AvatarImage 
             src={isUser ? "" : "https://0xjfocldlbtienb8.public.blob.vercel-storage.com/file_000000006a147206ae541ccfce29fda9%20%281%29.png"} 
-            className="object-contain p-1"
+            className="object-cover"
           />
           <AvatarFallback className={cn(isUser ? "bg-neutral-700 text-white" : "bg-white text-black")}>
             {isUser ? "U" : "V"}

@@ -57,13 +57,12 @@ export default function LiveVoicePage() {
           <div className="absolute inset-0 rounded-full border border-blue-500/20 animate-ping duration-[3000ms]" />
           <div className="absolute inset-0 rounded-full border border-purple-500/20 animate-ping duration-[2000ms] delay-500" />
           
-          <div className="w-32 h-32 rounded-full bg-white/5 border border-white/10 flex items-center justify-center p-6 backdrop-blur-xl relative overflow-hidden">
+          <div className="w-32 h-32 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl relative overflow-hidden">
             <Image 
               src="https://0xjfocldlbtienb8.public.blob.vercel-storage.com/file_000000006a147206ae541ccfce29fda9%20%281%29.png"
               alt="Vorgawall Agent"
-              width={80}
-              height={80}
-              className="object-contain"
+              fill
+              className="object-cover"
             />
           </div>
         </div>
