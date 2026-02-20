@@ -59,7 +59,7 @@ function ChatContent() {
     const savedChats = localStorage.getItem('vorgawall_chats');
     let chats: ChatSession[] = savedChats ? JSON.parse(savedChats) : [];
     
-    const currentId = chatId || forceId || Math.random().toString(36).substring(7);
+    const currentId = forceId || chatId || Math.random().toString(36).substring(7);
     const existingIndex = chats.findIndex(c => c.id === currentId);
 
     const updatedChat: ChatSession = {
@@ -81,7 +81,7 @@ function ChatContent() {
     setCurrentChat(updatedChat);
     localStorage.setItem('vorgawall_chats', JSON.stringify(chats));
     return currentId;
-  }, [chatId, currentChat]);
+  }, [chatId, currentChat?.title, currentChat?.date]);
 
   const handleSendMessage = useCallback((content: string, attachments?: Attachment[]) => {
     const userMsg: Message = { role: 'user', content, attachments };
@@ -93,12 +93,10 @@ function ChatContent() {
     setIsTyping(true);
     setStreamingContent('');
 
-    // Simulasi Delay Berpikir
     setTimeout(() => {
       const fullResponse = getMockResponse(content);
       setIsTyping(false);
       
-      // Simulasi Streaming Text (Kata demi kata)
       const words = fullResponse.split(' ');
       let currentIdx = 0;
       let streamedText = '';
@@ -119,11 +117,11 @@ function ChatContent() {
           setStreamingContent('');
           saveChatToLocal(finalMessages, activeId);
         }
-      }, 50); // Kecepatan streaming (50ms per kata)
+      }, 50);
     }, 1000);
   }, [messages, saveChatToLocal]);
 
-  const handleRename = (newTitle: string) => {
+  const handleRename = useCallback((newTitle: string) => {
     if (!currentChat) return;
     const savedChats = localStorage.getItem('vorgawall_chats');
     if (savedChats) {
@@ -132,12 +130,12 @@ function ChatContent() {
       if (index > -1) {
         chats[index].title = newTitle;
         localStorage.setItem('vorgawall_chats', JSON.stringify(chats));
-        setCurrentChat({ ...currentChat, title: newTitle });
+        setCurrentChat(prev => prev ? { ...prev, title: newTitle } : null);
       }
     }
-  };
+  }, [currentChat?.id]);
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     if (!currentChat) return;
     const savedChats = localStorage.getItem('vorgawall_chats');
     if (savedChats) {
@@ -146,7 +144,7 @@ function ChatContent() {
       localStorage.setItem('vorgawall_chats', JSON.stringify(filtered));
       router.push('/');
     }
-  };
+  }, [currentChat?.id, router]);
 
   const getMockResponse = (input: string) => {
     const lowerInput = input.toLowerCase();
@@ -182,7 +180,6 @@ function ChatContent() {
                 />
               ))}
               
-              {/* Indikator Sedang Berpikir */}
               {isTyping && (
                 <ChatMessage 
                   role="assistant" 
@@ -191,7 +188,6 @@ function ChatContent() {
                 />
               )}
 
-              {/* Tampilan Streaming Text */}
               {streamingContent && (
                 <ChatMessage 
                   role="assistant" 
@@ -206,7 +202,10 @@ function ChatContent() {
         </div>
       </ScrollArea>
 
-      <ChatInput onSendMessage={handleSendMessage} isTyping={isTyping || !!streamingContent} />
+      <ChatInput 
+        onSendMessage={handleSendMessage} 
+        isTyping={isTyping || !!streamingContent} 
+      />
     </div>
   );
 }

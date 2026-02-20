@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Plus, Settings2, AudioLines, ArrowUp, Camera, Image as ImageIcon, FileUp, Search, Sparkles, FileText, X, File } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -62,6 +62,18 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const adjustTextareaHeight = useCallback(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [value, adjustTextareaHeight]);
+
   const handleSubmit = () => {
     if (value.trim() || attachments.length > 0) {
       onSendMessage(value, attachments);
@@ -101,18 +113,6 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const removeAttachment = (id: string) => {
     setAttachments(prev => prev.filter(a => a.id !== id));
   };
-
-  const adjustTextareaHeight = () => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
-  };
-
-  useEffect(() => {
-    adjustTextareaHeight();
-  }, [value]);
 
   const hasContent = value.trim().length > 0 || attachments.length > 0;
 
@@ -273,30 +273,22 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
             </div>
 
             <div className="relative w-10 h-10 flex items-center justify-center">
-              <button
-                onClick={handleSubmit}
-                disabled={!hasContent || isTyping}
-                className={cn(
-                  "absolute inset-0 flex items-center justify-center rounded-full transition-all duration-500 ease-in-out focus:outline-none",
-                  hasContent 
-                    ? "bg-white text-black scale-100 rotate-0 opacity-100 shadow-lg" 
-                    : "bg-transparent text-neutral-400 scale-90 rotate-90 opacity-0 pointer-events-none"
-                )}
-              >
-                <ArrowUp className="w-5 h-5 stroke-[2.5px]" />
-              </button>
-              
-              <Link 
-                href="/live-voice"
-                className={cn(
-                  "absolute inset-0 flex items-center justify-center transition-all duration-500 ease-in-out focus:outline-none",
-                  !hasContent 
-                    ? "opacity-100 scale-100 rotate-0 text-neutral-400" 
-                    : "opacity-0 scale-50 -rotate-90 pointer-events-none"
-                )}
-              >
-                <AudioLines className="w-6 h-6" />
-              </Link>
+              {hasContent ? (
+                <button
+                  onClick={handleSubmit}
+                  disabled={isTyping}
+                  className="absolute inset-0 flex items-center justify-center rounded-full bg-white text-black scale-100 rotate-0 opacity-100 shadow-lg transition-all duration-300 focus:outline-none disabled:opacity-50"
+                >
+                  <ArrowUp className="w-5 h-5 stroke-[2.5px]" />
+                </button>
+              ) : (
+                <Link 
+                  href="/live-voice"
+                  className="absolute inset-0 flex items-center justify-center text-neutral-400 hover:text-white transition-all duration-300 focus:outline-none"
+                >
+                  <AudioLines className="w-6 h-6" />
+                </Link>
+              )}
             </div>
           </div>
         </div>
