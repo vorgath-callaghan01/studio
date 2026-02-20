@@ -36,6 +36,7 @@ function ChatContent() {
   
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [streamingContent, setStreamingContent] = useState('');
   const [currentChat, setCurrentChat] = useState<ChatSession | null>(null);
   const scrollEndRef = useRef<HTMLDivElement>(null);
 
@@ -62,16 +63,36 @@ function ChatContent() {
     const activeId = saveChatToLocal(newMessages);
 
     setIsTyping(true);
+    setStreamingContent('');
+
+    // Simulasi Delay Berpikir
     setTimeout(() => {
-      const assistantMsg: Message = { 
-        role: 'assistant', 
-        content: getMockResponse(content) 
-      };
-      const finalMessages = [...newMessages, assistantMsg];
-      setMessages(finalMessages);
-      saveChatToLocal(finalMessages, activeId);
+      const fullResponse = getMockResponse(content);
       setIsTyping(false);
-    }, 1500);
+      
+      // Simulasi Streaming Text (Kata demi kata)
+      const words = fullResponse.split(' ');
+      let currentIdx = 0;
+      let streamedText = '';
+
+      const interval = setInterval(() => {
+        if (currentIdx < words.length) {
+          streamedText += (currentIdx === 0 ? '' : ' ') + words[currentIdx];
+          setStreamingContent(streamedText);
+          currentIdx++;
+        } else {
+          clearInterval(interval);
+          const assistantMsg: Message = { 
+            role: 'assistant', 
+            content: fullResponse 
+          };
+          const finalMessages = [...newMessages, assistantMsg];
+          setMessages(finalMessages);
+          setStreamingContent('');
+          saveChatToLocal(finalMessages, activeId);
+        }
+      }, 50); // Kecepatan streaming (50ms per kata)
+    }, 1000);
   };
 
   const saveChatToLocal = (msgs: Message[], forceId?: string) => {
@@ -129,14 +150,14 @@ function ChatContent() {
 
   const getMockResponse = (input: string) => {
     const lowerInput = input.toLowerCase();
-    if (lowerInput.includes('hello') || lowerInput.includes('hi')) return "Hello! I'm the Vorgawall Assistant. How can I help you build your shop today?";
-    if (lowerInput.includes('price')) return "Vorgawall offers flexible pricing starting from $30/mo for starters. Check out vorgawall.shop for details.";
-    return "That's an interesting question. In the context of the Vorgawall ecosystem, we provide a unified API to handle global logistics and payments seamlessly.";
+    if (lowerInput.includes('hello') || lowerInput.includes('hi')) return "Hello! I'm the **Vorgawall Assistant**. How can I help you build your shop today? We offer various tools to help you succeed in the digital marketplace.";
+    if (lowerInput.includes('price')) return "Vorgawall offers flexible pricing starting from **$30/mo** for starters. \n\n### Our Plans:\n- **Starter**: $30/mo\n- **Business**: $99/mo\n- **Enterprise**: Custom Pricing\n\nCheck out [vorgawall.shop](https://vorgawall.shop) for details.";
+    return "That's an interesting question. In the context of the **Vorgawall ecosystem**, we provide a unified API to handle global logistics and payments seamlessly. Our goal is to empower small businesses to compete on a global scale with enterprise-grade technology.";
   };
 
   useEffect(() => {
     scrollEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+  }, [messages, isTyping, streamingContent]);
 
   return (
     <div className="flex-1 flex flex-col min-h-0 relative">
@@ -160,6 +181,8 @@ function ChatContent() {
                   attachments={msg.attachments}
                 />
               ))}
+              
+              {/* Indikator Sedang Berpikir */}
               {isTyping && (
                 <ChatMessage 
                   role="assistant" 
@@ -167,13 +190,23 @@ function ChatContent() {
                   isStreaming={true} 
                 />
               )}
+
+              {/* Tampilan Streaming Text */}
+              {streamingContent && (
+                <ChatMessage 
+                  role="assistant" 
+                  content={streamingContent} 
+                  isStreaming={true} 
+                />
+              )}
+              
               <div ref={scrollEndRef} />
             </div>
           )}
         </div>
       </ScrollArea>
 
-      <ChatInput onSendMessage={handleSendMessage} isTyping={isTyping} />
+      <ChatInput onSendMessage={handleSendMessage} isTyping={isTyping || !!streamingContent} />
     </div>
   );
 }
