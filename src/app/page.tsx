@@ -9,9 +9,17 @@ import { ChatInput } from '@/components/chat-input';
 import { ChatWelcome } from '@/components/chat-welcome';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
+interface Attachment {
+  id: string;
+  type: 'image' | 'file';
+  url: string;
+  name: string;
+}
+
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  attachments?: Attachment[];
 }
 
 interface ChatSession {
@@ -46,8 +54,8 @@ function ChatContent() {
     setCurrentChat(null);
   }, [chatId]);
 
-  const handleSendMessage = (content: string) => {
-    const userMsg: Message = { role: 'user', content };
+  const handleSendMessage = (content: string, attachments?: Attachment[]) => {
+    const userMsg: Message = { role: 'user', content, attachments };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     
@@ -149,6 +157,7 @@ function ChatContent() {
                   key={i} 
                   role={msg.role} 
                   content={msg.content} 
+                  attachments={msg.attachments}
                 />
               ))}
               {isTyping && (

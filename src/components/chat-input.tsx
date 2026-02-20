@@ -11,16 +11,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-interface ChatInputProps {
-  onSendMessage: (msg: string) => void;
-  isTyping?: boolean;
-}
-
 interface Attachment {
   id: string;
   type: 'image' | 'file';
   url: string;
   name: string;
+}
+
+interface ChatInputProps {
+  onSendMessage: (msg: string, attachments?: Attachment[]) => void;
+  isTyping?: boolean;
 }
 
 interface Feature {
@@ -64,7 +64,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
 
   const handleSubmit = () => {
     if (value.trim() || attachments.length > 0) {
-      onSendMessage(value);
+      onSendMessage(value, attachments);
       setValue('');
       setAttachments([]);
     }

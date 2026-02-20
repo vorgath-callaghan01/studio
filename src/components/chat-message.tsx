@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Copy, ThumbsUp, ThumbsDown, Bot, Check } from 'lucide-react';
+import { Copy, ThumbsUp, ThumbsDown, Bot, Check, FileText } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import {
   Dialog,
@@ -16,13 +16,21 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 
+interface Attachment {
+  id: string;
+  type: 'image' | 'file';
+  url: string;
+  name: string;
+}
+
 interface ChatMessageProps {
   role: 'user' | 'assistant';
   content: string;
   isStreaming?: boolean;
+  attachments?: Attachment[];
 }
 
-export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
+export function ChatMessage({ role, content, isStreaming, attachments }: ChatMessageProps) {
   const isUser = role === 'user';
   const [copied, setCopied] = useState(false);
   const [showDislikeDialog, setShowDislikeDialog] = useState(false);
@@ -85,17 +93,47 @@ export function ChatMessage({ role, content, isStreaming }: ChatMessageProps) {
           isUser ? "items-end" : "items-start"
         )}>
           <div className={cn(
-            "rounded-2xl px-5 py-3 shadow-lg bg-neutral-800 text-white w-full",
+            "rounded-2xl px-5 py-3 shadow-lg w-full flex flex-col gap-3",
             isUser 
-              ? "rounded-tr-none" 
-              : "rounded-tl-none"
+              ? "rounded-tr-none bg-neutral-800 text-white" 
+              : "rounded-tl-none bg-neutral-800 text-white"
           )}>
+            {/* Attachments Section */}
+            {attachments && attachments.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-1">
+                {attachments.map((att) => (
+                  <div key={att.id} className="max-w-full">
+                    {att.type === 'image' ? (
+                      <div className="relative rounded-xl overflow-hidden border border-white/10 bg-neutral-900/50">
+                        <img 
+                          src={att.url} 
+                          alt={att.name} 
+                          className="max-h-60 w-auto object-contain rounded-xl"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3 bg-neutral-900/40 p-3 rounded-xl border border-white/5 backdrop-blur-sm">
+                        <div className="w-10 h-10 rounded-lg bg-neutral-700 flex items-center justify-center shrink-0">
+                          <FileText className="w-5 h-5 text-neutral-300" />
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-xs font-bold text-white truncate max-w-[150px]">{att.name}</span>
+                          <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold">Document</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Message Content */}
             {isStreaming && !content ? (
               <div className="py-2 flex items-center justify-center">
                 <div className="dot-flashing" />
               </div>
             ) : (
-              <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+              <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere">
                 {content}
               </p>
             )}
