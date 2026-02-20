@@ -89,18 +89,19 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
         </Avatar>
 
         <div className={cn(
-          "flex flex-col gap-2 max-w-[85%] md:max-w-[75%]",
+          "flex flex-col gap-2 max-w-[85%] md:max-w-[70%]",
           isUser ? "items-end" : "items-start"
         )}>
           <div className={cn(
-            "rounded-3xl px-6 py-4 shadow-xl flex flex-col gap-3 min-w-0 w-fit",
-            "bg-neutral-800 text-white"
+            "rounded-3xl px-5 py-3.5 shadow-xl flex flex-col gap-3 min-w-0 w-fit",
+            "bg-neutral-800 text-white",
+            "overflow-hidden break-all"
           )}>
             {/* Attachments Section */}
             {attachments && attachments.length > 0 && (
-              <div className="flex flex-col gap-3 mb-1">
+              <div className="flex flex-col gap-3 mb-1 w-full">
                 {attachments.map((att) => (
-                  <div key={att.id} className="max-w-full">
+                  <div key={att.id} className="w-full">
                     {att.type === 'image' ? (
                       <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-neutral-900/50">
                         <img 
@@ -115,7 +116,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
                           <FileText className="w-5 h-5 text-neutral-300" />
                         </div>
                         <div className="flex flex-col min-w-0">
-                          <span className="text-xs font-bold text-white truncate max-w-[150px]">{att.name}</span>
+                          <span className="text-xs font-bold text-white truncate max-w-[120px]">{att.name}</span>
                           <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold">Document</span>
                         </div>
                       </div>
@@ -131,7 +132,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
                 <div className="dot-flashing" />
               </div>
             ) : (
-              <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere">
+              <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap break-all">
                 {content}
               </p>
             )}
