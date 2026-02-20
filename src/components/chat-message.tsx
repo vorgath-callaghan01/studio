@@ -93,7 +93,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
           isUser ? "items-end" : "items-start"
         )}>
           <div className={cn(
-            "rounded-2xl px-5 py-3 shadow-lg w-full flex flex-col gap-3",
+            "rounded-2xl px-5 py-3 shadow-lg flex flex-col gap-3 min-w-0",
             isUser 
               ? "rounded-tr-none bg-neutral-800 text-white" 
               : "rounded-tl-none bg-neutral-800 text-white"
