@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -15,6 +16,9 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 interface Attachment {
   id: string;
@@ -89,7 +93,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
         </Avatar>
 
         <div className={cn(
-          "flex flex-col gap-2 max-w-[85%] md:max-w-[70%]",
+          "flex flex-col gap-2 max-w-[85%] md:max-w-[75%]",
           isUser ? "items-end" : "items-start"
         )}>
           <div className={cn(
@@ -126,15 +130,64 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
               </div>
             )}
 
-            {/* Message Content */}
+            {/* Message Content with Markdown Rendering */}
             {isStreaming && !content ? (
               <div className="py-2 flex items-center justify-center px-4">
                 <div className="dot-flashing" />
               </div>
             ) : (
-              <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
-                {content}
-              </p>
+              <div className="markdown-content text-sm md:text-base leading-relaxed break-words [overflow-wrap:anywhere]">
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                  components={{
+                    h1: ({node, ...props}) => <h1 className="text-2xl font-bold mb-4 mt-2" {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-xl font-bold mb-3 mt-4" {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-lg font-bold mb-2 mt-4" {...props} />,
+                    p: ({node, ...props}) => <p className="mb-4 last:mb-0" {...props} />,
+                    ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-4 space-y-1" {...props} />,
+                    ol: ({node, ...props}) => <ol className="list-decimal pl-6 mb-4 space-y-1" {...props} />,
+                    li: ({node, ...props}) => <li className="mb-0" {...props} />,
+                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-neutral-600 pl-4 py-1 italic mb-4 bg-neutral-700/30 rounded-r-lg" {...props} />,
+                    code: ({node, inline, className, children, ...props}: any) => {
+                      return inline ? (
+                        <code className="bg-neutral-700 px-1.5 py-0.5 rounded text-sm font-mono border border-white/10" {...props}>
+                          {children}
+                        </code>
+                      ) : (
+                        <div className="my-4 relative group">
+                           <pre className="bg-neutral-900 p-4 rounded-2xl overflow-x-auto border border-white/10 font-mono text-sm leading-6">
+                            <code className={className} {...props}>
+                              {children}
+                            </code>
+                          </pre>
+                        </div>
+                      )
+                    },
+                    table: ({node, ...props}) => (
+                      <div className="overflow-x-auto mb-4 border border-white/10 rounded-2xl bg-neutral-900/50">
+                        <table className="w-full border-collapse" {...props} />
+                      </div>
+                    ),
+                    thead: ({node, ...props}) => <thead className="bg-neutral-700/50" {...props} />,
+                    th: ({node, ...props}) => <th className="border border-white/10 px-4 py-2 text-left font-bold" {...props} />,
+                    td: ({node, ...props}) => <td className="border border-white/10 px-4 py-2" {...props} />,
+                    hr: ({node, ...props}) => <hr className="my-6 border-white/10" {...props} />,
+                    a: ({node, ...props}) => <a className="text-blue-400 hover:text-blue-300 underline underline-offset-4 decoration-2 transition-colors" target="_blank" rel="noopener noreferrer" {...props} />,
+                    img: ({node, ...props}) => <img className="rounded-2xl max-h-72 w-auto mx-auto my-4 border border-white/10 shadow-lg" {...props} />,
+                    details: ({node, ...props}) => <details className="mb-4 bg-neutral-900/30 border border-white/10 rounded-2xl overflow-hidden p-2" {...props} />,
+                    summary: ({node, ...props}) => <summary className="cursor-pointer font-bold px-4 py-2 hover:bg-white/5 transition-colors" {...props} />,
+                    input: ({node, ...props}) => {
+                      if (props.type === 'checkbox') {
+                        return <input type="checkbox" className="mr-2 h-4 w-4 rounded border-white/20 bg-neutral-700 text-blue-500 focus:ring-0" readOnly {...props} />;
+                      }
+                      return <input {...props} />;
+                    },
+                  }}
+                >
+                  {content}
+                </ReactMarkdown>
+              </div>
             )}
           </div>
 
@@ -216,7 +269,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-white">AI Model Information</DialogTitle>
             <DialogDescription className="text-neutral-400">
-              This is where you display the AI model being used, transparency is number 1 in business 🙏🏼☺️
+              Ini adalah tempat anda menampilkan model AI yang digunakan, transparansi adalah nomer 1 dalam bisnis 🙏🏼☺️
             </DialogDescription>
           </DialogHeader>
           <div className="py-6 flex flex-col items-center gap-4">
