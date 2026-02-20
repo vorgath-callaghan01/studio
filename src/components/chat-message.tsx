@@ -95,7 +95,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
           <div className={cn(
             "rounded-3xl px-5 py-3.5 shadow-xl flex flex-col gap-3 min-w-0 w-fit",
             "bg-neutral-800 text-white",
-            "overflow-hidden break-all"
+            "overflow-hidden break-words"
           )}>
             {/* Attachments Section */}
             {attachments && attachments.length > 0 && (
@@ -132,7 +132,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
                 <div className="dot-flashing" />
               </div>
             ) : (
-              <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap break-all">
+              <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap break-words">
                 {content}
               </p>
             )}
