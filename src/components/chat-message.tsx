@@ -75,10 +75,10 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
   return (
     <>
       <div className={cn(
-        "flex w-full gap-4 mb-6 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2",
+        "flex w-full gap-4 mb-8 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2",
         isUser ? "flex-row-reverse" : "flex-row"
       )}>
-        <Avatar className="w-8 h-8 shrink-0 border border-neutral-200 shadow-sm bg-white overflow-hidden">
+        <Avatar className="w-8 h-8 shrink-0 border border-neutral-200 shadow-sm bg-white overflow-hidden mt-1">
           <AvatarImage 
             src={isUser ? "" : "https://0xjfocldlbtienb8.public.blob.vercel-storage.com/file_000000006a147206ae541ccfce29fda9%20%281%29.png"} 
             className="object-contain p-1"
@@ -93,14 +93,14 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
           isUser ? "items-end" : "items-start"
         )}>
           <div className={cn(
-            "rounded-2xl px-5 py-3 shadow-lg flex flex-col gap-3 min-w-0",
+            "rounded-2xl px-5 py-3 shadow-lg flex flex-col gap-3 min-w-0 w-fit",
             isUser 
               ? "rounded-tr-none bg-neutral-800 text-white" 
               : "rounded-tl-none bg-neutral-800 text-white"
           )}>
             {/* Attachments Section */}
             {attachments && attachments.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-1">
+              <div className="flex flex-col gap-2 mb-1">
                 {attachments.map((att) => (
                   <div key={att.id} className="max-w-full">
                     {att.type === 'image' ? (
@@ -108,7 +108,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
                         <img 
                           src={att.url} 
                           alt={att.name} 
-                          className="max-h-60 w-auto object-contain rounded-xl"
+                          className="max-h-64 w-full object-cover rounded-xl"
                         />
                       </div>
                     ) : (
@@ -129,7 +129,7 @@ export function ChatMessage({ role, content, isStreaming, attachments }: ChatMes
 
             {/* Message Content */}
             {isStreaming && !content ? (
-              <div className="py-2 flex items-center justify-center">
+              <div className="py-2 flex items-center justify-center px-4">
                 <div className="dot-flashing" />
               </div>
             ) : (
