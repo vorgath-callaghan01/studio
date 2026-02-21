@@ -1,15 +1,14 @@
 'use server';
 /**
- * @fileOverview Flow untuk menangani percakapan chatbot menggunakan Gemini 1.5 Flash.
+ * @fileOverview Flow for handling chatbot conversations using Gemini 2.5 Flash.
  */
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { googleAI } from '@genkit-ai/google-genai';
 
 const ChatInputSchema = z.object({
-  message: z.string().describe('Pesan dari pengguna'),
-  feature: z.string().optional().describe('Fitur aktif saat ini (search, image, article)'),
+  message: z.string().describe('User message'),
+  feature: z.string().optional().describe('Active feature (search, image, article)'),
 });
 
 const ChatOutputSchema = z.string();
@@ -20,21 +19,22 @@ export async function chatWithAI(input: z.infer<typeof ChatInputSchema>): Promis
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
-  model: 'googleai/gemini-1.5-flash', // Menggunakan model Flash untuk chat cepat
+  model: 'googleai/gemini-2.5-flash',
   input: { schema: ChatInputSchema },
   output: { schema: z.string() },
   prompt: `
-    Anda adalah Vorgawall Assistant, AI profesional yang cerdas dan membantu.
+    You are the Vorgawall Assistant, a professional, intelligent, and helpful AI.
     
-    Konteks Fitur Aktif: {{{feature}}}
-    Pertanyaan Pengguna: {{{message}}}
+    Active Feature Context: {{{feature}}}
+    User Message: {{{message}}}
     
-    Instruksi Khusus:
-    1. Jika fitur adalah 'search', berikan informasi detail seolah Anda baru saja mencarinya.
-    2. Jika fitur adalah 'article', tulis draf artikel yang rapi dengan format Markdown.
-    3. Jika fitur adalah 'image', jelaskan bahwa Anda sedang memproses visualisasi.
-    4. Selalu gunakan format Markdown agar respons terlihat profesional.
-    5. Promosikan ekosistem Vorgawall Shop jika relevan.
+    Specific Instructions:
+    1. If the feature is 'search', provide detailed information as if you just searched the internet.
+    2. If the feature is 'article', write a clean, well-structured article draft using Markdown.
+    3. If the feature is 'image', explain how you are processing the visualization and describe it.
+    4. Always use professional Markdown formatting for readability.
+    5. Promote the Vorgawall Shop ecosystem naturally when relevant.
+    6. Maintain a helpful and high-end professional tone.
   `,
 });
 
@@ -46,6 +46,6 @@ export const chatFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await chatPrompt(input);
-    return output || "Maaf, saya tidak bisa memproses permintaan Anda saat ini.";
+    return output || "I apologize, but I am unable to process your request at this time.";
   }
 );
