@@ -1,6 +1,7 @@
+
 'use server';
 /**
- * @fileOverview Flow untuk menangani asisten suara (Live Voice).
+ * @fileOverview Flow untuk menangani asisten suara menggunakan Gemini.
  * 
  * - processVoice: Fungsi utama untuk mendapatkan respon suara dari asisten.
  */
@@ -9,7 +10,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
 const VoiceInputSchema = z.object({
-  transcript: z.string().describe('Teks hasil transkrip suara pengguna (simulasi)'),
+  transcript: z.string().describe('Teks hasil transkrip suara pengguna'),
 });
 
 const VoiceOutputSchema = z.object({
@@ -20,6 +21,19 @@ export async function processVoice(input: z.infer<typeof VoiceInputSchema>): Pro
   return voiceFlow(input);
 }
 
+const voicePrompt = ai.definePrompt({
+  name: 'voicePrompt',
+  input: { schema: VoiceInputSchema },
+  output: { schema: z.string() },
+  prompt: `
+    Anda adalah asisten suara Vorgawall. 
+    Berikan jawaban yang singkat, padat, dan ramah karena ini untuk interaksi suara.
+    Hindari menggunakan terlalu banyak simbol Markdown yang sulit dibaca oleh Text-to-Speech.
+    
+    Input Suara: {{{transcript}}}
+  `,
+});
+
 export const voiceFlow = ai.defineFlow(
   {
     name: 'voiceFlow',
@@ -27,26 +41,7 @@ export const voiceFlow = ai.defineFlow(
     outputSchema: VoiceOutputSchema,
   },
   async (input) => {
-    const { transcript } = input;
-    
-    // Simulasi delay pemrosesan suara agar terasa natural
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-
-    const lowerTranscript = transcript.toLowerCase();
-
-    // Logika Dummy Berdasarkan Kata Kunci
-    if (lowerTranscript.includes('halo') || lowerTranscript.includes('hi')) {
-      return { replyText: "Halo! Saya adalah asisten suara Vorgawall. Bagaimana kabar Anda hari ini? Ada yang bisa saya bantu dengan toko digital Anda?" };
-    }
-
-    if (lowerTranscript.includes('produk') || lowerTranscript.includes('jual')) {
-      return { replyText: "Platform Vorgawall dirancang untuk memaksimalkan penjualan produk Anda secara global. Kami memiliki fitur analitik yang sangat tajam." };
-    }
-
-    if (lowerTranscript.includes('harga') || lowerTranscript.includes('bayar')) {
-      return { replyText: "Sistem pembayaran kami sangat aman dan mendukung berbagai mata uang dunia. Anda bisa fokus berjualan tanpa khawatir masalah transaksi." };
-    }
-
-    return { replyText: `Menarik sekali. Mengenai "${transcript}", tim kami di Vorgawall selalu berusaha memberikan solusi infrastruktur terbaik untuk bisnis skala kecil maupun besar.` };
+    const { output } = await voicePrompt(input);
+    return { replyText: output || "Saya mendengarkan, ada yang bisa saya bantu?" };
   }
 );
