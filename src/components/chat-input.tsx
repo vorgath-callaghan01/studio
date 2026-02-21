@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
@@ -19,7 +19,7 @@ interface Attachment {
 }
 
 interface ChatInputProps {
-  onSendMessage: (msg: string, attachments?: Attachment[]) => void;
+  onSendMessage: (msg: string, attachments?: Attachment[], featureId?: string) => void;
   isTyping?: boolean;
 }
 
@@ -75,8 +75,8 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   }, [value, adjustTextareaHeight]);
 
   const handleSubmit = () => {
-    if (value.trim() || attachments.length > 0) {
-      onSendMessage(value, attachments);
+    if ((value.trim() || attachments.length > 0) && !isTyping) {
+      onSendMessage(value, attachments, activeFeature?.id);
       setValue('');
       setAttachments([]);
       if (textareaRef.current) {
@@ -180,6 +180,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
             onKeyDown={handleKeyDown}
             placeholder={activeFeature ? activeFeature.placeholder : "Ask anything..."}
             className="w-full bg-transparent border-none focus:ring-0 focus:outline-none outline-none resize-none max-h-40 p-0 text-white placeholder:text-neutral-500 font-body text-lg leading-relaxed shadow-none"
+            disabled={isTyping}
           />
 
           <div className="flex items-center justify-between mt-2">
@@ -192,6 +193,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                   <button 
                     type="button"
                     className="rounded-full w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+                    disabled={isTyping}
                   >
                     <Plus className="w-5 h-5" />
                   </button>
@@ -241,6 +243,7 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
                     <button 
                       type="button"
                       className="rounded-full w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+                      disabled={isTyping}
                     >
                       <Settings2 className="w-5 h-5" />
                     </button>

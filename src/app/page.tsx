@@ -8,6 +8,7 @@ import { ChatMessage } from '@/components/chat-message';
 import { ChatInput } from '@/components/chat-input';
 import { ChatWelcome } from '@/components/chat-welcome';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { chatWithAI } from '@/ai/flows/chat-flow';
 
 interface Attachment {
   id: string;
@@ -83,7 +84,7 @@ function ChatContent() {
     return currentId;
   }, [chatId, currentChat?.title, currentChat?.date]);
 
-  const handleSendMessage = useCallback((content: string, attachments?: Attachment[]) => {
+  const handleSendMessage = useCallback(async (content: string, attachments?: Attachment[], featureId?: string) => {
     const userMsg: Message = { role: 'user', content, attachments };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
@@ -93,8 +94,10 @@ function ChatContent() {
     setIsTyping(true);
     setStreamingContent('');
 
-    setTimeout(() => {
-      const fullResponse = getMockResponse(content);
+    try {
+      // Panggil Dummy API via Genkit Flow
+      const fullResponse = await chatWithAI({ message: content, feature: featureId });
+      
       setIsTyping(false);
       
       const words = fullResponse.split(' ');
@@ -117,8 +120,15 @@ function ChatContent() {
           setStreamingContent('');
           saveChatToLocal(finalMessages, activeId);
         }
-      }, 50);
-    }, 1000);
+      }, 30);
+    } catch (error) {
+      console.error("API Error:", error);
+      setIsTyping(false);
+      const errorMsg: Message = { role: 'assistant', content: "Maaf, terjadi kesalahan pada koneksi API kami. Silakan coba lagi nanti." };
+      const finalMessages = [...newMessages, errorMsg];
+      setMessages(finalMessages);
+      saveChatToLocal(finalMessages, activeId);
+    }
   }, [messages, saveChatToLocal]);
 
   const handleRename = useCallback((newTitle: string) => {
@@ -145,13 +155,6 @@ function ChatContent() {
       router.push('/');
     }
   }, [currentChat?.id, router]);
-
-  const getMockResponse = (input: string) => {
-    const lowerInput = input.toLowerCase();
-    if (lowerInput.includes('hello') || lowerInput.includes('hi')) return "Hello! I'm the **Vorgawall Assistant**. How can I help you build your shop today? We offer various tools to help you succeed in the digital marketplace.";
-    if (lowerInput.includes('price')) return "Vorgawall offers flexible pricing starting from **$30/mo** for starters. \n\n### Our Plans:\n- **Starter**: $30/mo\n- **Business**: $99/mo\n- **Enterprise**: Custom Pricing\n\nCheck out [vorgawall.shop](https://vorgawall.shop) for details.";
-    return "That's an interesting question. In the context of the **Vorgawall ecosystem**, we provide a unified API to handle global logistics and payments seamlessly. Our goal is to empower small businesses to compete on a global scale with enterprise-grade technology.";
-  };
 
   useEffect(() => {
     scrollEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -180,7 +183,7 @@ function ChatContent() {
                 />
               ))}
               
-              {isTyping && (
+              {isTyping && !streamingContent && (
                 <ChatMessage 
                   role="assistant" 
                   content="" 
