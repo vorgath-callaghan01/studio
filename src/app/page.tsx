@@ -41,7 +41,6 @@ function ChatContent() {
   const [currentChat, setCurrentChat] = useState<ChatSession | null>(null);
   const scrollEndRef = useRef<HTMLDivElement>(null);
 
-  // Memuat chat dari local storage saat ID berubah
   useEffect(() => {
     const savedChats = localStorage.getItem('vorgawall_chats');
     if (chatId && savedChats) {
@@ -57,7 +56,6 @@ function ChatContent() {
     setCurrentChat(null);
   }, [chatId]);
 
-  // Fungsi stabil untuk menyimpan chat
   const saveChatToLocal = useCallback((msgs: Message[], forceId?: string) => {
     const savedChats = localStorage.getItem('vorgawall_chats');
     let chats: ChatSession[] = savedChats ? JSON.parse(savedChats) : [];
@@ -86,7 +84,6 @@ function ChatContent() {
     return currentId;
   }, [chatId, currentChat?.title, currentChat?.date]);
 
-  // Handler pengiriman pesan yang stabil
   const handleSendMessage = useCallback(async (content: string, attachments?: Attachment[], featureId?: string) => {
     if (!content.trim() && (!attachments || attachments.length === 0)) return;
 
@@ -124,7 +121,7 @@ function ChatContent() {
       }, 30);
     } catch (error) {
       setIsTyping(false);
-      const errorMsg: Message = { role: 'assistant', content: "Maaf, terjadi kesalahan pada koneksi AI. Pastikan API Key sudah terpasang." };
+      const errorMsg: Message = { role: 'assistant', content: "I'm sorry, there was an error with the AI connection. Please ensure your API Key is set correctly." };
       const finalMessages = [...updatedWithUser, errorMsg];
       setMessages(finalMessages);
       saveChatToLocal(finalMessages, activeId);
@@ -209,7 +206,7 @@ function ChatContent() {
 
 export default function Home() {
   return (
-    <main className="h-screen w-full flex flex-col bg-[#F0F0F0] overflow-hidden fixed inset-0">
+    <main className="h-dvh w-full flex flex-col bg-[#F0F0F0] overflow-hidden fixed inset-0">
       <Suspense fallback={
         <div className="h-full w-full flex items-center justify-center bg-[#F0F0F0]">
           <div className="animate-pulse flex flex-col items-center gap-4">

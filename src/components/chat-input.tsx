@@ -62,7 +62,6 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Fungsi penyesuaian tinggi yang lebih stabil tanpa memicu render loop
   const adjustTextareaHeight = useCallback(() => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -119,12 +118,12 @@ export function ChatInput({ onSendMessage, isTyping }: ChatInputProps) {
   const hasContent = value.trim().length > 0 || attachments.length > 0;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 md:p-8 bg-gradient-to-t from-[#F0F0F0] via-[#F0F0F0] to-transparent pointer-events-none">
+    <div className="fixed bottom-0 left-0 right-0 p-4 md:p-8 bg-gradient-to-t from-[#F0F0F0] via-[#F0F0F0] to-transparent pointer-events-none z-40">
       <div className="max-w-4xl mx-auto w-full pointer-events-auto">
         
-        <input type="file" ref={cameraInputRef} accept="image/*" capture="environment" className="hidden" onChange={(e) => handleFileChange(e, 'image')} />
-        <input type="file" ref={galleryInputRef} accept="image/*" className="hidden" multiple onChange={(e) => handleFileChange(e, 'image')} />
-        <input type="file" ref={fileInputRef} accept=".pdf,.txt,.html,.js,.css,.tsx,.json,.md,.doc,.docx" className="hidden" multiple onChange={(e) => handleFileChange(e, 'file')} />
+        <input type="file" ref={cameraInputRef} accept="image/*" capture="environment" style={{ display: 'none' }} onChange={(e) => handleFileChange(e, 'image')} />
+        <input type="file" ref={galleryInputRef} accept="image/*" style={{ display: 'none' }} multiple onChange={(e) => handleFileChange(e, 'image')} />
+        <input type="file" ref={fileInputRef} accept=".pdf,.txt,.html,.js,.css,.tsx,.json,.md,.doc,.docx" style={{ display: 'none' }} multiple onChange={(e) => handleFileChange(e, 'file')} />
         
         <div className="bg-[#171717] rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] overflow-hidden p-4 md:p-5 flex flex-col gap-2 transition-all duration-300 border border-white/5">
           
