@@ -1,13 +1,11 @@
-
 'use server';
 /**
- * @fileOverview Flow untuk menangani percakapan chatbot menggunakan Gemini.
- * 
- * - chatWithAI: Fungsi utama untuk mendapatkan respon dari asisten.
+ * @fileOverview Flow untuk menangani percakapan chatbot menggunakan Gemini 1.5 Flash.
  */
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+import { googleAI } from '@genkit-ai/google-genai';
 
 const ChatInputSchema = z.object({
   message: z.string().describe('Pesan dari pengguna'),
@@ -22,6 +20,7 @@ export async function chatWithAI(input: z.infer<typeof ChatInputSchema>): Promis
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
+  model: 'googleai/gemini-1.5-flash', // Menggunakan model Flash untuk chat cepat
   input: { schema: ChatInputSchema },
   output: { schema: z.string() },
   prompt: `
@@ -33,8 +32,8 @@ const chatPrompt = ai.definePrompt({
     Instruksi Khusus:
     1. Jika fitur adalah 'search', berikan informasi detail seolah Anda baru saja mencarinya.
     2. Jika fitur adalah 'article', tulis draf artikel yang rapi dengan format Markdown.
-    3. Jika fitur adalah 'image', jelaskan bahwa Anda sedang memproses visualisasi (gunakan simulasi gambar Markdown jika perlu).
-    4. Selalu gunakan format Markdown (bold, list, table) agar respons terlihat profesional.
+    3. Jika fitur adalah 'image', jelaskan bahwa Anda sedang memproses visualisasi.
+    4. Selalu gunakan format Markdown agar respons terlihat profesional.
     5. Promosikan ekosistem Vorgawall Shop jika relevan.
   `,
 });
