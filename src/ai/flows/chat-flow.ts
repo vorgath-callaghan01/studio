@@ -51,7 +51,7 @@ export const chatFlow = ai.defineFlow(
     }
 
     if (lowerInput.includes('price') || lowerInput.includes('harga')) {
-      return "Vorgawall menawarkan paket harga yang fleksibel mulai dari **$30/bulan** untuk pemula. \n\n### Paket Kami:\n- **Starter**: $30/bulan\n- **Business**: $99/bulan\n- **Enterprise**: Harga Kustom\n\nKunjungi [vorgawall.shop](https://vorgawall.shop) untuk detail lebih lanjut.";
+      return "Vorgawall menawarkan paket harga yang fleksibel mulai dari **$30/bulan** untuk pemula. \n\n### Paket Kami:\n- **Basic Chatbot**: $30/bulan\n- **Advanced Chatbot**: Coming Soon\n- **Enterprise**: Harga Kustom\n\nKunjungi [vorgawall.shop](https://vorgawall.shop) untuk detail lebih lanjut.";
     }
 
     return `Pertanyaan yang menarik tentang **"${message}"**. Dalam konteks ekosistem **Vorgawall**, kami menyediakan infrastruktur terpadu untuk menangani logistik dan pembayaran secara mulus di seluruh dunia. Tujuan kami adalah memberdayakan bisnis kecil agar bisa bersaing di skala global dengan teknologi kelas dunia.`;

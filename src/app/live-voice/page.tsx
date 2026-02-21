@@ -1,17 +1,23 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Mic, MicOff, PhoneOff, MoreVertical, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { processVoice } from '@/ai/flows/voice-flow';
 
 export default function LiveVoicePage() {
   const [isMuted, setIsMuted] = useState(false);
   const [isCalling, setIsCalling] = useState(true);
   const [timer, setTimer] = useState(0);
+  const [agentText, setAgentText] = useState("Listening for your voice...");
+  const [isProcessing, setIsProcessing] = useState(false);
+  
+  const interactionTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  // Timer Durasi Panggilan
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isCalling) {
@@ -21,6 +27,42 @@ export default function LiveVoicePage() {
     }
     return () => clearInterval(interval);
   }, [isCalling]);
+
+  // Simulasi Deteksi Suara dan Panggilan Dummy API
+  useEffect(() => {
+    if (isCalling && !isMuted && !isProcessing) {
+      // Simulasi asisten berbicara setiap 8-10 detik jika mik aktif
+      interactionTimeout.current = setTimeout(async () => {
+        setIsProcessing(true);
+        setAgentText("Asisten sedang memproses...");
+        
+        try {
+          const response = await processVoice({ 
+            transcript: "Halo Vorgawall, tolong jelaskan tentang layanan Anda." 
+          });
+          
+          setAgentText(response.replyText);
+          
+          // Gunakan Web Speech API untuk suara asisten (Client Side)
+          if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(response.replyText);
+            utterance.lang = 'id-ID';
+            utterance.rate = 1.1;
+            window.speechSynthesis.speak(utterance);
+          }
+        } catch (error) {
+          console.error("Voice API Error:", error);
+          setAgentText("Maaf, koneksi suara terganggu.");
+        } finally {
+          setIsProcessing(false);
+        }
+      }, 8000);
+    }
+
+    return () => {
+      if (interactionTimeout.current) clearTimeout(interactionTimeout.current);
+    };
+  }, [isCalling, isMuted, isProcessing]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -54,8 +96,14 @@ export default function LiveVoicePage() {
       <div className="flex-1 flex flex-col items-center justify-center relative z-10 px-6">
         <div className="relative mb-12">
           {/* Animated Rings */}
-          <div className="absolute inset-0 rounded-full border border-blue-500/20 animate-ping duration-[3000ms]" />
-          <div className="absolute inset-0 rounded-full border border-purple-500/20 animate-ping duration-[2000ms] delay-500" />
+          <div className={cn(
+            "absolute inset-0 rounded-full border border-blue-500/20 animate-ping duration-[3000ms]",
+            isMuted && "hidden"
+          )} />
+          <div className={cn(
+            "absolute inset-0 rounded-full border border-purple-500/20 animate-ping duration-[2000ms] delay-500",
+            isMuted && "hidden"
+          )} />
           
           <div className="w-32 h-32 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl relative overflow-hidden">
             <Image 
@@ -67,20 +115,27 @@ export default function LiveVoicePage() {
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold mb-2">Vorgawall Assistant</h2>
-        <p className="text-neutral-400 text-center max-w-xs mb-12">
-          {isMuted ? "Microphone muted" : "Listening for your voice..."}
-        </p>
+        <h2 className="text-2xl font-bold mb-4 text-center">Vorgawall Assistant</h2>
+        
+        {/* Teks Respons Asisten */}
+        <div className="max-w-xs text-center min-h-[60px] flex items-center justify-center">
+          <p className={cn(
+            "text-sm leading-relaxed transition-all duration-500",
+            isProcessing ? "text-neutral-500 animate-pulse" : "text-white"
+          )}>
+            {isMuted ? "Microphone ditangguhkan" : agentText}
+          </p>
+        </div>
 
         {/* Waveform Animation */}
         {!isMuted && isCalling && (
-          <div className="flex items-center gap-1.5 h-12 mb-12">
+          <div className="flex items-center gap-1.5 h-12 mt-12 mb-8">
             {[...Array(12)].map((_, i) => (
               <div 
                 key={i}
                 className="w-1 bg-white/40 rounded-full animate-pulse"
                 style={{ 
-                  height: `${Math.random() * 100}%`,
+                  height: `${isProcessing ? '20%' : Math.random() * 100 + '%'}`,
                   animationDelay: `${i * 0.1}s`,
                   animationDuration: '0.6s'
                 }}
