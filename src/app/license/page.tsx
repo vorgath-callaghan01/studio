@@ -85,7 +85,7 @@ export default function LicensePage() {
 
             <div className="pt-6 border-t border-neutral-100 flex flex-col items-center gap-4">
                <p className="text-[10px] text-[#0a0a0a] text-center uppercase tracking-[0.2em] font-bold opacity-30">
-                © 2025 Vorgawall Shop • Premium AI Solutions
+                © 2026 Vorgawall Shop • Premium AI Solutions
               </p>
             </div>
           </Card>
