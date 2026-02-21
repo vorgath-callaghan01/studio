@@ -41,6 +41,7 @@ function ChatContent() {
   const [currentChat, setCurrentChat] = useState<ChatSession | null>(null);
   const scrollEndRef = useRef<HTMLDivElement>(null);
 
+  // Memuat chat dari local storage saat ID berubah
   useEffect(() => {
     const savedChats = localStorage.getItem('vorgawall_chats');
     if (chatId && savedChats) {
@@ -56,6 +57,7 @@ function ChatContent() {
     setCurrentChat(null);
   }, [chatId]);
 
+  // Fungsi stabil untuk menyimpan chat
   const saveChatToLocal = useCallback((msgs: Message[], forceId?: string) => {
     const savedChats = localStorage.getItem('vorgawall_chats');
     let chats: ChatSession[] = savedChats ? JSON.parse(savedChats) : [];
@@ -84,18 +86,20 @@ function ChatContent() {
     return currentId;
   }, [chatId, currentChat?.title, currentChat?.date]);
 
+  // Handler pengiriman pesan yang stabil
   const handleSendMessage = useCallback(async (content: string, attachments?: Attachment[], featureId?: string) => {
+    if (!content.trim() && (!attachments || attachments.length === 0)) return;
+
     const userMsg: Message = { role: 'user', content, attachments };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
+    const updatedWithUser = [...messages, userMsg];
+    setMessages(updatedWithUser);
     
-    const activeId = saveChatToLocal(newMessages);
+    const activeId = saveChatToLocal(updatedWithUser);
 
     setIsTyping(true);
     setStreamingContent('');
 
     try {
-      // Panggil Dummy API via Genkit Flow
       const fullResponse = await chatWithAI({ message: content, feature: featureId });
       
       setIsTyping(false);
@@ -111,21 +115,17 @@ function ChatContent() {
           currentIdx++;
         } else {
           clearInterval(interval);
-          const assistantMsg: Message = { 
-            role: 'assistant', 
-            content: fullResponse 
-          };
-          const finalMessages = [...newMessages, assistantMsg];
+          const assistantMsg: Message = { role: 'assistant', content: fullResponse };
+          const finalMessages = [...updatedWithUser, assistantMsg];
           setMessages(finalMessages);
           setStreamingContent('');
           saveChatToLocal(finalMessages, activeId);
         }
       }, 30);
     } catch (error) {
-      console.error("API Error:", error);
       setIsTyping(false);
-      const errorMsg: Message = { role: 'assistant', content: "Maaf, terjadi kesalahan pada koneksi API kami. Silakan coba lagi nanti." };
-      const finalMessages = [...newMessages, errorMsg];
+      const errorMsg: Message = { role: 'assistant', content: "Maaf, terjadi kesalahan pada koneksi AI. Pastikan API Key sudah terpasang." };
+      const finalMessages = [...updatedWithUser, errorMsg];
       setMessages(finalMessages);
       saveChatToLocal(finalMessages, activeId);
     }
@@ -157,8 +157,10 @@ function ChatContent() {
   }, [currentChat?.id, router]);
 
   useEffect(() => {
-    scrollEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping, streamingContent]);
+    if (messages.length > 0 || isTyping || streamingContent) {
+      scrollEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages.length, isTyping, streamingContent]);
 
   return (
     <div className="flex-1 flex flex-col min-h-0 relative">
@@ -184,22 +186,14 @@ function ChatContent() {
               ))}
               
               {isTyping && !streamingContent && (
-                <ChatMessage 
-                  role="assistant" 
-                  content="" 
-                  isStreaming={true} 
-                />
+                <ChatMessage role="assistant" content="" isStreaming={true} />
               )}
 
               {streamingContent && (
-                <ChatMessage 
-                  role="assistant" 
-                  content={streamingContent} 
-                  isStreaming={true} 
-                />
+                <ChatMessage role="assistant" content={streamingContent} isStreaming={true} />
               )}
               
-              <div ref={scrollEndRef} />
+              <div ref={scrollEndRef} className="h-4" />
             </div>
           )}
         </div>
